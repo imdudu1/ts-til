@@ -1,18 +1,18 @@
 import LinkedListNode from "./linked-list-node";
 
-interface List<T> {
+export interface List<T> {
   get(index: number): T;
   size(): number;
 }
 
-interface MutableList<T> extends List<T> {
+export interface MutableList<T> extends List<T> {
   pushBack(value: T): void;
   pushFront(value: T): void;
   popBack(): T;
   popFront(): T;
 }
 
-class LinkedList<T> implements MutableList<T> {
+export class LinkedList<T> implements MutableList<T> {
   private head: LinkedListNode<T>;
   private tail: LinkedListNode<T>;
 
@@ -86,9 +86,12 @@ class LinkedList<T> implements MutableList<T> {
   }
 
   size(): number {
+    if (!this.head) {
+      return 0;
+    }
     let size = 0;
     let cur = this.head;
-    while (cur?.next != null) {
+    while (cur != null) {
       cur = cur.next;
       size++;
     }
