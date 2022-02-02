@@ -58,7 +58,9 @@ export class LinkedList<T> implements MutableList<T> {
       throw new Error("Empty list");
     }
     const result = this.tail.val;
-    this.tail.prev.next = null;
+    if (this.tail.prev) {
+      this.tail.prev.next = null;
+    }
     this.tail = this.tail.prev;
     return result;
   }
@@ -68,7 +70,9 @@ export class LinkedList<T> implements MutableList<T> {
       throw new Error("Empty list");
     }
     const result = this.head.val;
-    this.head.next.prev = null;
+    if (this.head.next) {
+      this.head.next.prev = null;
+    }
     this.head = this.head.next;
     return result;
   }

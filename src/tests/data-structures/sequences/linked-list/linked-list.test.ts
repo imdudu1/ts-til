@@ -10,6 +10,15 @@ describe("Linked list 테스트", () => {
     linkedlist = LinkedList.mutableList();
   });
 
+  it("빈 linked list", () => {
+    expect(linkedlist.size()).toBe(0);
+  });
+
+  it("빈 linked list에서 pop하면 예외가 발생한다.", () => {
+    expect(() => linkedlist.popBack()).toThrowError();
+    expect(() => linkedlist.popFront()).toThrowError();
+  });
+
   it("삽입(push)", () => {
     linkedlist.pushBack(10);
     linkedlist.pushBack(20);
