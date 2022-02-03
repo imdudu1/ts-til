@@ -8,10 +8,6 @@ class BackwardActionIterator implements IterableIterator<TodoActionType> {
   }
 }
 
-interface Action {
-  type: string;
-}
-
 interface ListNode<T> {
   value: T;
   prev: ListNode<T>;
