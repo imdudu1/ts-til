@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MoviesModule } from '../src/api/movies/movies.module';
@@ -50,24 +50,81 @@ describe('Movie (e2e)', () => {
     const tagNames = ['action', 'abcd'];
     const title = 'sample';
 
-    const tags = await Promise.all(
-      tagNames.map((tag) => tagsRepo.save(Tag.create(tag))),
-    );
-    const movie = moviesRepo.create(Movie.create(title, tags));
+    const movie = await getMovieEntity(title, tagNames);
+
     await moviesRepo.save(movie);
 
     const response = await request(app.getHttpServer()).get('/movies');
 
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(HttpStatus.OK);
     expect(response.body).toHaveLength(1);
     expect(response.body[0].title).toBe(title);
     expect(response.body[0].tags).toHaveLength(2);
     expect(response.body[0].tags).toEqual(expect.arrayContaining(tagNames));
   });
 
-  it.todo('/movies POST');
+  it('/movies POST', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/movies')
+      .send({ title: 'sample movie', tags: ['action', 'comedy'] });
 
-  it.todo('/movies/:id PUT');
+    expect(response.statusCode).toBe(HttpStatus.CREATED);
+    expect(response.body.title).toBe('sample movie');
+    expect(response.body.tags).toHaveLength(2);
+    expect(response.body.tags).toEqual(
+      expect.arrayContaining(['action', 'comedy']),
+    );
+  });
 
-  it.todo('/movies/:id DELETE');
+  it('/movies/:id GET', async () => {
+    const tagNames = ['action', 'abcd'];
+    const title = 'sample';
+
+    const movie = await getMovieEntity(title, tagNames);
+
+    const response = await request(app.getHttpServer()).get(
+      `/movies/${movie.id}`,
+    );
+
+    expect(response.statusCode).toBe(HttpStatus.OK);
+    expect(response.body.title).toBe(title);
+    expect(response.body.tags).toHaveLength(2);
+    expect(response.body.tags).toEqual(expect.arrayContaining(tagNames));
+  });
+
+  it('/movies/:id PATCH', async () => {
+    const tagNames = ['action', 'abcd'];
+    const title = 'sample';
+
+    const movie = await getMovieEntity(title, tagNames);
+
+    const response = await request(app.getHttpServer())
+      .patch(`/movies/${movie.id}`)
+      .send({
+        title: 'updated title',
+      });
+
+    expect(response.statusCode).toBe(HttpStatus.OK);
+    expect(response.body.title).toBe('updated title');
+  });
+
+  it('/movies/:id DELETE', async () => {
+    const tagNames = ['action', 'abcd'];
+    const title = 'sample';
+
+    const movie = await getMovieEntity(title, tagNames);
+
+    const response = await request(app.getHttpServer()).delete(
+      `/movies/${movie.id}`,
+    );
+
+    expect(response.statusCode).toBe(HttpStatus.OK);
+  });
+
+  async function getMovieEntity(title: string, tags: string[]) {
+    const tagEntities = await Promise.all(
+      tags.map((tag) => tagsRepo.save(Tag.create(tag))),
+    );
+    return moviesRepo.save(moviesRepo.create(Movie.create(title, tagEntities)));
+  }
 });
