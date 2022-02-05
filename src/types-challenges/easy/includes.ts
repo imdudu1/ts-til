@@ -1,11 +1,11 @@
-type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y
+type UEqual<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y
   ? 1
   : 2
   ? true
   : false;
 
 type Includes<T extends readonly any[], U> = T extends [infer R, ...infer W]
-  ? Equal<U, R> extends true
+  ? UEqual<U, R> extends true
     ? true
     : Includes<W, U>
   : false;
