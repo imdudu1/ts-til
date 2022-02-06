@@ -1,48 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateMovieDto, UpdateMovieDto } from './dto';
-import { MovieItem } from './dto/movie-item.dto';
-import { Movie, Tag } from './entities';
+import { MovieItemResponse } from './dto/movie-item.dto';
+import { MoviesRepository } from './movies.repository';
 
 @Injectable()
 export class MoviesService {
-  constructor(
-    @InjectRepository(Movie)
-    private readonly moviesRepository: Repository<Movie>,
-    @InjectRepository(Tag)
-    private readonly tagsRepository: Repository<Tag>,
-  ) {}
+  constructor(private readonly moviesRepository: MoviesRepository) {}
 
-  async create(createMovieDto: CreateMovieDto) {
-    const movie = Movie.create(
-      createMovieDto.title,
-      await this.createTags(createMovieDto.tags),
-    );
-    return this.moviesRepository.save(movie);
-  }
-
-  private createTags(tags: string[]) {
-    return Promise.all(
-      tags.map((tag) => this.tagsRepository.save(Tag.create(tag))),
+  async create(createMovieDto: CreateMovieDto): Promise<MovieItemResponse> {
+    return MovieItemResponse.of(
+      await this.moviesRepository.create(createMovieDto),
     );
   }
 
-  async findAll() {
-    const movies = await this.moviesRepository.find();
-    return movies.map(MovieItem.of);
+  async findAll(): Promise<MovieItemResponse[]> {
+    return (await this.moviesRepository.findAll()).map(MovieItemResponse.of);
   }
 
-  async findOne(id: number) {
-    const movie = await this.moviesRepository.findOne({ id });
-    return movie.tags;
+  async findOne(id: number): Promise<MovieItemResponse> {
+    return MovieItemResponse.of(await this.moviesRepository.findOne(id));
   }
 
-  update(id: number, updateMovieDto: UpdateMovieDto) {
-    return this.moviesRepository.update({ id }, {});
+  async update(
+    id: number,
+    updateMovieDto: UpdateMovieDto,
+  ): Promise<MovieItemResponse> {
+    const target = await this.moviesRepository.findOne(id);
+    target.update(updateMovieDto.title);
+    return MovieItemResponse.of(await this.moviesRepository.update(target));
   }
 
   remove(id: number) {
-    return this.moviesRepository.delete({ id });
+    return this.moviesRepository.remove(id);
   }
 }

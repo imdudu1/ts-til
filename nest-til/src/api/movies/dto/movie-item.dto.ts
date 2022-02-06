@@ -1,10 +1,10 @@
 import { Movie, Tag } from '../entities';
 
-export class MovieItem {
+export class MovieItemResponse {
   title: string;
   tags: string[];
 
-  static of(entity: Movie): MovieItem {
+  static of(entity: Movie): MovieItemResponse {
     return {
       title: entity.title,
       tags: entity.tags.map((tag) => tag.name),

@@ -16,4 +16,8 @@ export class Movie extends BaseTimeEntity {
     movie.tags = tags;
     return movie;
   }
+
+  update(title: string) {
+    this.title = title;
+  }
 }
