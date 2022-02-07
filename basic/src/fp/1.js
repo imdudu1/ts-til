@@ -7,14 +7,16 @@ const curry = func => {
   }
 }
 
-const take = (l, iter) => {
+const take = curry((l, iter) => {
   let res = [];
-  for (const e of iter) {
-    res.push(e);
+  iter = iter[Symbol.iterator]();
+  let cur;
+  while (!(cur = iter.next()).done) {
+    res.push(cur.value);
     if (res.length === l) return res;
   }
   return res;
-}
+});
 
 const reduce = curry((func, acc, iter) => {
   if (!iter) {
@@ -27,7 +29,7 @@ const reduce = curry((func, acc, iter) => {
   return acc;
 });
 
-const map = curry(pipe(L.map, take(Infinity)))
+const takeAll = take(Infinity);
 
 const go = (...args) => reduce((v, func) => func(v), args);
 
@@ -62,6 +64,22 @@ L.entries = function* (obj) {
   }
 }
 
+L.flatten = function* (iter) {
+  for (const elem of iter) {
+    if (elem && elem[Symbol.iterator]) {
+      for (const inner of elem) {
+        yield inner;
+      }
+      continue;
+    }
+    yield elem;
+  }
+}
+
+const map = curry(pipe(L.map, takeAll));
+
+const filter = curry(pipe(L.filter, takeAll));
+
 // Example (1)
 const products = [
   {name: 'ram', price: 130000},
@@ -79,3 +97,7 @@ go(
 // Example (2)
 const join = curry((sep = ', ', iter) => reduce((prev, cur) => `${prev}${sep}${cur}`, iter));
 console.log(join()([1,23,4]))
+
+// Example (3)
+const flattenArray = [[1, 2], 3, 4, [5, 6, 7, 8], 9];
+console.log(...L.flatten(flattenArray))
