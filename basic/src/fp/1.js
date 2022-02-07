@@ -11,7 +11,7 @@ const take = (l, iter) => {
   let res = [];
   for (const e of iter) {
     res.push(e);
-    if (res.length == l) return res;
+    if (res.length === l) return res;
   }
   return res;
 }
@@ -27,9 +27,11 @@ const reduce = curry((func, acc, iter) => {
   return acc;
 });
 
+const map = curry(pipe(L.map, take(Infinity)))
+
 const go = (...args) => reduce((v, func) => func(v), args);
 
-const pipe = (func, ...otherFuncs) => (...args) => go(func(...args), ...otherFuncs);
+const pipe = (func, ...othersFunc) => (...args) => go(func(...args), ...othersFunc);
 
 const L = {};
 
