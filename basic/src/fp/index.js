@@ -1,4 +1,4 @@
-import {F, L} from "./utils.mjs";
+import {C, F, L} from "./utils.mjs";
 
 // Example (1)
 const products = [
@@ -53,9 +53,26 @@ F.go(
 
 // Example (8)
 F.go(
-    [1,2,3,4,5],
+    [1, 2, 3, 4, 5],
     L.map(a => Promise.resolve(a * a)),
     L.filter(a => Promise.resolve(a % 2)),
     F.reduce((a, b) => a + b),
     F.log('Promise reduce example >> ')
 )
+
+// Example (9)
+const delay1000 = a => new Promise(resolve => {
+    setTimeout(() => resolve(a), 1000);
+});
+F.go(
+    L.range(100),
+    L.map(a => delay1000(a * a)),
+    L.filter(a => a % 2),
+    C.take(2),
+    C.reduce((a, b) => a + b),
+    F.log('Concurrent reduce example >> ')
+)
+
+// Example (10)
+C.map(a => delay1000(a * a), [1, 2, 3, 4, 5, 6, 7]).then(F.log('Concurrent map example >> '));
+C.filter(a => delay1000(a % 2), [1, 2, 3, 4, 5, 6, 7]).then(F.log('Concurrent filter example >> '));

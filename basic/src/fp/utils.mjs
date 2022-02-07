@@ -1,5 +1,6 @@
-const F = {};
-const L = {};
+const F = Object.create(null);
+const L = Object.create(null);
+const C = Object.create(null);
 
 F.curry = func => {
     return (a, ..._) => {
@@ -32,12 +33,10 @@ F.take = F.curry((l, iter) => {
 F._go = (v, func) => v instanceof Promise ? v.then(func) : func(v);
 
 const head = iter => F._go(F.take(1, iter), ([h]) => h);
-
 const reduceF = (acc, a, f) =>
     a instanceof Promise
         ? a.then(a => f(acc, a), e => e === NOP ? acc : Promise.reject(e))
         : f(acc, a);
-
 F.reduce = F.curry((f, acc, iter) => {
     if (!iter) return F.reduce(f, head(iter = acc[Symbol.iterator]()), iter);
 
@@ -126,6 +125,28 @@ F.flatMap = F.curry(F.pipe(L.map, F.flatten));
 
 F.log = F.curry((prefix = '[LOG]', iter) => console.log(prefix, iter));
 
+function noop() {}
+const catchNoop = arr => {
+    arr.forEach(a => {
+        if (a instanceof Promise) {
+            a.catch(noop)
+        }
+    })
+    return arr;
+};
+C.reduce = F.curry((f, acc, iter) => {
+    const _ = catchNoop(iter ? [...iter] : [...acc]);
+    return iter ? F.reduce(f, acc, _) : F.reduce(f, _);
+});
+
+C.take = F.curry((l, iter) => F.take(l, catchNoop([...iter])))
+
+const concurrentTakeAll = C.take(Infinity);
+
+C.map = F.curry(F.pipe(L.map, concurrentTakeAll));
+
+C.filter = F.curry(F.pipe(L.filter, concurrentTakeAll));
+
 export {
-    F, L
+    F, L, C
 }
