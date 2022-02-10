@@ -1,0 +1,18 @@
+{
+  "name": "js-design-pattern",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/aid95/ts-til.git",
+  "author": "Byeongju, Shin <cd80@kakao.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.2",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1",
+    "prettier": "^2.5.1"
+  }
+}
