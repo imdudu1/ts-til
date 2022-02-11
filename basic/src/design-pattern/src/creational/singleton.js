@@ -3,7 +3,8 @@ export class Pizza {
     if (typeof Pizza.instance === "object") {
       return Pizza.instance;
     }
-    Pizza.instance = this;
-    return this;
+    const that = Object.freeze(this);
+    Pizza.instance = that;
+    return that;
   }
 }

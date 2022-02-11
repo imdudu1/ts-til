@@ -14,6 +14,7 @@ class NormalKimbap {
 
   constructor() {
     this.#kcal = 10_000;
+    return Object.freeze(this);
   }
 
   get kcal() {
@@ -30,6 +31,7 @@ class KimchiKimbap {
 
   constructor() {
     this.#kcal = 100_000;
+    return Object.freeze(this);
   }
 
   get kcal() {

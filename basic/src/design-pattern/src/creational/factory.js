@@ -9,5 +9,6 @@ export class KimbapHeaven {
 class CheeseKimbap {
   constructor() {
     this.kcal = 100_000_000;
+    return Object.freeze(this);
   }
 }

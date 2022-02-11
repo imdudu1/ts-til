@@ -1,34 +1,9 @@
 export class Request {
-  #url;
-  #method;
-  #body;
-
-  constructor() {
+  constructor(method, url, body) {
+    this.method = method;
+    this.url = url;
+    this.body = body;
     return Object.seal(this);
-  }
-
-  get url() {
-    return this.#url;
-  }
-
-  set url(value) {
-    this.#url = value;
-  }
-
-  get method() {
-    return this.#method;
-  }
-
-  set method(value) {
-    this.#method = value;
-  }
-
-  get body() {
-    return this.#body;
-  }
-
-  set body(value) {
-    this.#body = value;
   }
 }
 
