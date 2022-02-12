@@ -28,13 +28,22 @@ Human.of = function (name, age, address) {
     return new Human(name, age, address);
 }
 
-const obj = new Human('Byeongju, Shin', 28, 'Github');
+function Programmer(name, age, address, lang) {
+    Human.apply(this, arguments);
+    this.lang = lang;
 
-const obj2 = Human.of('Bitcake0', 28, 'Github aid95');
+    let coffeeCount = 0;
+    this.drinkCoffee = function () {
+        console.log(++coffeeCount);
+    }
 
-obj.sayHi();
-obj2.sayHi();
+    return Object.seal(this);
+}
+Programmer.prototype = Object.create(Human.prototype);
+Programmer.prototype.constructor = Programmer;
 
-console.log(obj.sayHi === obj2.sayHi); // true
-
-console.log(obj.profile());
+const programmer = new Programmer('Byeongju, Shin', 28, 'Github', 'javascript');
+console.log(programmer.profile());
+programmer.drinkCoffee();
+programmer.drinkCoffee();
+programmer.drinkCoffee();
