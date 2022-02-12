@@ -16,6 +16,10 @@ function Human(name, age, address) {
     const nameAndAge = () => {
         return `${this.name} (${this.age})`;
     }
+
+    this.work = function () {
+        throw new Error('you have to build your own \'work\' method');
+    }
 }
 
 // Public methods
@@ -37,6 +41,10 @@ function Programmer(name, age, address, lang) {
         console.log(++coffeeCount);
     }
 
+    this.work = function () {
+        console.log(`${this.name} is coding a ${this.lang} program!`)
+    }
+
     return Object.seal(this);
 }
 Programmer.prototype = Object.create(Human.prototype);
@@ -47,3 +55,4 @@ console.log(programmer.profile());
 programmer.drinkCoffee();
 programmer.drinkCoffee();
 programmer.drinkCoffee();
+programmer.work();
