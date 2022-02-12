@@ -1,18 +1,15 @@
-const obj = {
-    name: 'Byeongju, Shin',
-    age: 28,
-    sayHi() {
-        console.log(`${this.name} (${this.age}) : Hi!`)
-    }
-};
+function Human(name, age) {
+    const _name = name;
+    const _age = age;
 
-const obj2 = {
-    name: 'Bitcake0',
-    age: 28,
-    sayHi() {
-        console.log(`${this.name} (${this.age}) : Hi!`)
+    this.sayHi = function () {
+        console.log(`${_name} (${_age}) : Hi!`)
     }
-};
+}
+
+const obj = new Human('Byeongju, Shin', 28);
+
+const obj2 = new Human('Bitcake0', 28);
 
 obj.sayHi();
 obj2.sayHi();
