@@ -1,36 +1,39 @@
-function Human(name, age, address) {
-  // Private variables
-  const _address = address;
+const Human = (function(){
+  function Human(name, age, address) {
+    // Private variables
+    const _address = address;
 
-  // Public variables
-  this.name = name;
-  this.age = age;
+    // Public variables
+    this.name = name;
+    this.age = age;
 
-  // Public methods
-  this.profile = function () {
-    // Accessing private member variables
-    return `${nameAndAge()}, ${_address}`;
+    // Private methods
+    const nameAndAge = () => {
+      return `${this.name} (${this.age})`;
+    }
+
+    // Public methods
+    this.profile = function () {
+      // Accessing private member variables
+      return `${nameAndAge()}, ${_address}`;
+    }
+
+    this.work = function () {
+      throw new Error('you have to build your own \'work\' method');
+    }
+
+    this.sayHi = function () {
+      console.log(`${this.name} (${this.age}) : Hi!`)
+    }
   }
 
-  // Private methods
-  const nameAndAge = () => {
-    return `${this.name} (${this.age})`;
+  // Static methods
+  Human.of = function (name, age, address) {
+    return new Human(name, age, address);
   }
 
-  this.work = function () {
-    throw new Error('you have to build your own \'work\' method');
-  }
-}
-
-// Public methods
-Human.prototype.sayHi = function () {
-  console.log(`${this.name} (${this.age}) : Hi!`)
-}
-
-// Static methods
-Human.of = function (name, age, address) {
-  return new Human(name, age, address);
-}
+  return Human;
+})();
 
 function Programmer(name, age, address, lang) {
   Human.apply(this, arguments);
