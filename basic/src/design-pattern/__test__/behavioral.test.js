@@ -1,19 +1,42 @@
 import {
   AmountDiscount,
-  CristmasDiscountor,
+  ChristmasDiscounter,
   PercentDiscount,
   Product,
 } from "../src/behavioral/chain-of-responsibility";
+import {
+  MoveDown,
+  MoveLeft,
+  MoveRight,
+  MoveUp,
+  Robot,
+} from "../src/behavioral/command";
 
 describe("Behavioral Tests", function () {
   test("Chain of responsibility", function () {
-    const amountDiscountor = new AmountDiscount(1000);
-    const percentDiscountor = new PercentDiscount(0.1);
-    amountDiscountor.setNext(percentDiscountor);
+    const amountDiscounter = new AmountDiscount(1000);
+    const percentDiscounter = new PercentDiscount(0.1);
+    amountDiscounter.setNext(percentDiscounter);
 
-    const event = new CristmasDiscountor(amountDiscountor);
+    const event = new ChristmasDiscounter(amountDiscounter);
     const samsungTV = new Product(10_000);
 
     expect(event.calc(samsungTV).price).toBe(900);
+  });
+
+  test("Command Tests", function () {
+    const robot = new Robot(0, 0);
+    const moves = [
+      new MoveRight(),
+      new MoveLeft(),
+      new MoveLeft(),
+      new MoveUp(),
+      new MoveDown(),
+    ];
+
+    moves.map((command) => command.execute(robot));
+
+    expect(robot.x).toBe(-1);
+    expect(robot.y).toBe(0);
   });
 });
