@@ -5,16 +5,16 @@ export class Product {
   }
 }
 
-export class CristmasDiscountor {
-  #discountor;
+export class ChristmasDiscounter {
+  #discounter;
 
-  constructor(discountor) {
-    this.#discountor = discountor;
+  constructor(discounter) {
+    this.#discounter = discounter;
     return Object.freeze(this);
   }
 
   calc(product) {
-    return this.#discountor.exec(product);
+    return this.#discounter.exec(product);
   }
 }
 
