@@ -13,11 +13,13 @@ const connection = {
     const connection = getConnection();
     const entities = connection.entityMetadatas;
 
-    const entityDeletionPromises = entities.map((entity) => async () => {
-      const repository = connection.getRepository(entity.name);
-      await repository.clear();
-    });
-    await Promise.all(entityDeletionPromises);
+    await Promise.all(entities.map((e) => this.deleteAll(e.name)));
+  },
+
+  async deleteAll(entityName: string) {
+    const connection = getConnection();
+    const repository = connection.getRepository(entityName);
+    return repository.delete({});
   },
 };
 

@@ -1,0 +1,20 @@
+{
+  "name": "default",
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "shane",
+  "password": "demo123",
+  "database": "demo_db",
+  "synchronize": true,
+  "logging": ["query"],
+  "entities": [
+     "src/database/entities/**/*.ts"
+  ],
+  "migrations": [
+     "src/database/migrations/**/*.ts"
+  ],
+  "subscribers": [
+     "src/database/subscribers/**/*.ts"
+  ]
+}
