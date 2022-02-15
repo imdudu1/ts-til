@@ -17,7 +17,7 @@ export class Movie extends BaseTimeEntity {
 
   @ManyToMany((type) => Genre)
   @JoinTable()
-  genre: Genre;
+  genres: Genre[];
 
   @ManyToMany(() => User, (user) => user.movies)
   recommendations: User[];
