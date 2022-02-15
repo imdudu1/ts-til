@@ -1,5 +1,5 @@
 import { User } from "../src/database/entities/user.entity";
-import { getRepository } from "typeorm";
+import { EntityNotFoundError, getRepository } from "typeorm";
 import connection from "../src/connection";
 
 beforeAll(async () => {
@@ -10,7 +10,7 @@ afterAll(async () => {
   await connection.close();
 });
 
-beforeEach(async () => {
+afterEach(async () => {
   await connection.clear();
 });
 
@@ -95,4 +95,38 @@ test("delete user", async () => {
 
   // Then
   expect(findUser).toBeUndefined();
+});
+
+describe("Query builder", () => {
+  test("get user", async () => {
+    const user = new User();
+    user.email = "sample@example.com";
+    user.nickname = "bitcake0";
+
+    await getRepository(User).save(user);
+
+    const findUser = await getRepository(User)
+      .createQueryBuilder()
+      .select("user")
+      .from(User, "user")
+      .where("user.id = :userId", { userId: user.id })
+      .getOne();
+
+    expect(findUser.id).toBe(user.id);
+    expect(findUser.email).toBe(user.email);
+    expect(findUser.nickname).toBe(user.nickname);
+  });
+
+  test("throw not found exception", async () => {
+    const fn = () =>
+      getRepository(User)
+        .createQueryBuilder()
+        .select("user")
+        .from(User, "user")
+        .where("user.id = :userId", { userId: 0 })
+        .getOneOrFail();
+
+    // expect(fn).rejects.toThrowError(EntityNotFoundError);
+    await expect(fn).rejects.toThrowError(EntityNotFoundError);
+  });
 });
