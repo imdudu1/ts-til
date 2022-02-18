@@ -12,4 +12,11 @@ export class UsersRepository {
   save(entity: User): Promise<User> {
     return this.repository.save(entity);
   }
+
+  findById(id: number): Promise<User> {
+    return this.repository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
+  }
 }

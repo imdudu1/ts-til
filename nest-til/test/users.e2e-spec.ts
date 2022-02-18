@@ -78,7 +78,22 @@ describe('User (e2e)', () => {
   });
 
   describe('/users/:id GET', () => {
-    it.todo('사용자 아이디를 통해 특정 사용자를 조회한다.');
+    it('사용자 아이디를 통해 특정 사용자를 조회한다.', async () => {
+      const name = 'byeongju, shin';
+      const email = 'test@example.com';
+      const description = 'best programmer';
+      const user = User.create(name, email, description);
+      await getRepository(User).save(user);
+
+      const res = await request(app.getHttpServer())
+        .get(`/users/${user.id}`)
+        .send();
+
+      expect(res.statusCode).toBe(HttpStatus.OK);
+      expect(res.body.name).toBe(name);
+      expect(res.body.email).toBe(email);
+      expect(res.body.description).toBe(description);
+    });
     it.todo('없는 사용자 아이디를 조회하면 404 Not found 를 반환한다.');
   });
   describe('/users GET', () => {

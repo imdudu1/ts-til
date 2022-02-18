@@ -3,6 +3,7 @@ import { CreateUserDto, CreateUserResponseDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
+import { GetUserByIdResponseDto } from './dto/get-user-by-id.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,8 +19,8 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: number): Promise<GetUserByIdResponseDto> {
+    return this.usersRepository.findById(id).then(GetUserByIdResponseDto.from);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

@@ -26,18 +26,44 @@ describe('UsersRepository', () => {
     repository = moduleRef.get<UsersRepository>(UsersRepository);
   });
 
+  afterEach(async () => {
+    await connection.clear();
+  });
+
+  afterAll(async () => {
+    await connection.close();
+  });
+
   it('사용자 엔티티를 저장한다.', async () => {
+    // GIVEN
+    const name = 'sample';
+    const email = 'sample@example.com';
+    const description = 'sudo rm -rf /';
+    const param = User.create(name, email, description);
+
+    // WHEN
+    const entity = await repository.save(param);
+
+    // THEN
+    expect(entity.id).toBeTruthy();
+    expect(entity.name).toBe(name);
+    expect(entity.email).toBe(email);
+    expect(entity.description).toBe(description);
+  });
+
+  it('사용자를 조회한다.', async () => {
+    // GIVEN
     const name = 'sample';
     const email = 'sample@example.com';
     const description = 'sudo rm -rf /';
 
     const param = User.create(name, email, description);
+    await repository.save(param);
 
-    const entity = await repository.save(param);
+    // WHEN
+    const findUser = await repository.findById(param.id);
 
-    expect(entity.id).toBeTruthy();
-    expect(entity.name).toBe(name);
-    expect(entity.email).toBe(email);
-    expect(entity.description).toBe(description);
+    // THEN
+    expect(findUser.id).toBe(param.id);
   });
 });
