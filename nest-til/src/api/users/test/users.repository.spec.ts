@@ -66,4 +66,16 @@ describe('UsersRepository', () => {
     // THEN
     expect(findUser.id).toBe(param.id);
   });
+
+  it('사용자 목록을 조회한다.', async () => {
+    const users = [];
+    for (let i = 0; i < 10; i++) {
+      users.push(User.create(`user${i}`, `example${i}@example.com`, 'hello'));
+    }
+    await getRepository(User).save(users);
+
+    const findUsers = await repository.findAll();
+
+    expect(findUsers.length).toBe(10);
+  });
 });

@@ -3,7 +3,7 @@ import { CreateUserDto, CreateUserResponseDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
-import { GetUserByIdResponseDto } from './dto/get-user-by-id.dto';
+import { UserItem } from './dto/user-item';
 
 @Injectable()
 export class UsersService {
@@ -15,15 +15,16 @@ export class UsersService {
       .then(CreateUserResponseDto.from);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<UserItem[]> {
+    const users = await this.usersRepository.findAll();
+    return users.map(UserItem.from);
   }
 
-  findOne(id: number): Promise<GetUserByIdResponseDto> {
+  findOne(id: number): Promise<UserItem> {
     return this.usersRepository
       .findById(id)
       .then((res) => res ?? Promise.reject(new NotFoundException()))
-      .then(GetUserByIdResponseDto.from);
+      .then(UserItem.from);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

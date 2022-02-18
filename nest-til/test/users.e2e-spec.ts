@@ -100,7 +100,20 @@ describe('User (e2e)', () => {
     });
   });
   describe('/users GET', () => {
-    it.todo('전체 사용자를 조회한다.');
+    it('전체 사용자를 조회한다.', async () => {
+      const users = [];
+      for (let i = 0; i < 10; i++) {
+        users.push(User.create(`user${i}`, `example${i}@example.com`, 'hello'));
+      }
+      await getRepository(User).save(users);
+
+      const res = await request(app.getHttpServer())
+        .get(`/users`)
+        .query({})
+        .send();
+      expect(res.statusCode).toBe(HttpStatus.OK);
+      expect(res.body.leading).toBeGreaterThanOrEqual(1);
+    });
   });
   describe('/users/:id PATCH', () => {
     it.todo('사용자 정보를 갱신한다.');

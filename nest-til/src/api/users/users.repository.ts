@@ -19,4 +19,8 @@ export class UsersRepository {
       .where('user.id = :id', { id })
       .getOne();
   }
+
+  findAll(): Promise<User[]> {
+    return this.repository.createQueryBuilder('user').getMany();
+  }
 }

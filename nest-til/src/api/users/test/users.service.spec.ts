@@ -4,6 +4,7 @@ import { UsersRepository } from '../users.repository';
 import { mockUser } from './user';
 import { User } from '../entities/user.entity';
 import { NotFoundException } from '@nestjs/common';
+import spyOn = jest.spyOn;
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -13,6 +14,7 @@ describe('UsersService', () => {
     const mockUsersRepository = {
       save: jest.fn(),
       findById: jest.fn(),
+      findAll: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -79,5 +81,18 @@ describe('UsersService', () => {
     jest.spyOn(usersRepository, 'findById').mockResolvedValue(undefined);
 
     await expect(service.findOne(9574)).rejects.toThrowError(NotFoundException);
+  });
+
+  it('사용자 목록을 조회한다.', async () => {
+    spyOn(usersRepository, 'findAll').mockResolvedValue([
+      User.create('', '', ''),
+    ]);
+
+    // WHEN
+    const body = await service.findAll();
+
+    // THEN
+    expect(body.totalPage).toBe(1);
+    expect(body.currentPage).toBe(10);
   });
 });
