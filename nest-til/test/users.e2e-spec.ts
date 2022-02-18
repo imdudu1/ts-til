@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,7 +16,7 @@ describe('User (e2e)', () => {
       imports: [
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
         TypeOrmModule.forRoot({
-          type: 'mysql',
+          type: 'postgres',
           host: process.env.DB_HOST,
           port: Number(process.env.DB_PORT),
           username: process.env.DB_USER,
@@ -32,6 +32,7 @@ describe('User (e2e)', () => {
     usersRepository = getRepository(User);
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   });
 
@@ -55,14 +56,27 @@ describe('User (e2e)', () => {
         description,
       });
 
-      expect(res.statusCode).toBe(201);
+      expect(res.statusCode).toBe(HttpStatus.CREATED);
       expect(res.body.id).toBeTruthy();
       expect(res.body.name).toBe(name);
       expect(res.body.email).toBe(email);
       expect(res.body.description).toBe(description);
     });
-    it.todo('잘못된 값을 요청한 경우 400 Bad Request 를 반환한다.');
+    it('잘못된 값을 요청한 경우 400 Bad Request 를 반환한다.', async () => {
+      const name = '123';
+      const email = '123';
+      const description = '';
+
+      const res = await request(app.getHttpServer()).post(`/users`).send({
+        name,
+        email,
+        description,
+      });
+
+      expect(res.statusCode).toBe(HttpStatus.BAD_REQUEST);
+    });
   });
+
   describe('/users/:id GET', () => {
     it.todo('사용자 아이디를 통해 특정 사용자를 조회한다.');
     it.todo('없는 사용자 아이디를 조회하면 404 Not found 를 반환한다.');
