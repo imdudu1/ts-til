@@ -94,7 +94,10 @@ describe('User (e2e)', () => {
       expect(res.body.email).toBe(email);
       expect(res.body.description).toBe(description);
     });
-    it.todo('없는 사용자 아이디를 조회하면 404 Not found 를 반환한다.');
+    it('없는 사용자 아이디를 조회하면 404 Not found 를 반환한다.', async () => {
+      const res = await request(app.getHttpServer()).get(`/users/9574`).send();
+      expect(res.statusCode).toBe(HttpStatus.NOT_FOUND);
+    });
   });
   describe('/users GET', () => {
     it.todo('전체 사용자를 조회한다.');

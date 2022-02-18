@@ -13,7 +13,7 @@ export class UsersRepository {
     return this.repository.save(entity);
   }
 
-  findById(id: number): Promise<User> {
+  findById(id: number): Promise<User | undefined> {
     return this.repository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })

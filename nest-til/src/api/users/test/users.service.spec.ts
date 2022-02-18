@@ -3,6 +3,7 @@ import { UsersService } from '../users.service';
 import { UsersRepository } from '../users.repository';
 import { mockUser } from './user';
 import { User } from '../entities/user.entity';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -72,5 +73,11 @@ describe('UsersService', () => {
     expect(user.name).toBe(name);
     expect(user.email).toBe(email);
     expect(user.description).toBe(description);
+  });
+
+  it('없는 사용자를 조회한 경우 404 Not found 를 반환한다.', async () => {
+    jest.spyOn(usersRepository, 'findById').mockResolvedValue(undefined);
+
+    await expect(service.findOne(9574)).rejects.toThrowError(NotFoundException);
   });
 });

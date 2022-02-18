@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto, CreateUserResponseDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
@@ -20,7 +20,10 @@ export class UsersService {
   }
 
   findOne(id: number): Promise<GetUserByIdResponseDto> {
-    return this.usersRepository.findById(id).then(GetUserByIdResponseDto.from);
+    return this.usersRepository
+      .findById(id)
+      .then((res) => res ?? Promise.reject(new NotFoundException()))
+      .then(GetUserByIdResponseDto.from);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
