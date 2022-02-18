@@ -9,8 +9,9 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
-    const user = await this.usersRepository.save(User.of(createUserDto));
-    return CreateUserResponseDto.of(user);
+    return this.usersRepository
+      .save(User.of(createUserDto))
+      .then(CreateUserResponseDto.from);
   }
 
   findAll() {

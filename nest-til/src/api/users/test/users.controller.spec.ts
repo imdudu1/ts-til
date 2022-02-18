@@ -39,7 +39,7 @@ describe('UsersController', () => {
     jest
       .spyOn(usersService, 'create')
       .mockResolvedValue(
-        CreateUserResponseDto.of(mockUser(name, email, description)),
+        CreateUserResponseDto.from(mockUser(name, email, description)),
       );
 
     const dto = {

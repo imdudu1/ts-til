@@ -19,7 +19,7 @@ export class CreateUserResponseDto {
   readonly email: string;
   readonly description: string;
 
-  static of(entity: User): CreateUserResponseDto {
+  static from(entity: User): CreateUserResponseDto {
     return {
       id: entity.id,
       name: entity.name,
