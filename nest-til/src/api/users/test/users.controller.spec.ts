@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
-import { mockUser } from './user';
-import { CreateUserResponseDto } from '../dto/create-user.dto';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -11,6 +10,8 @@ describe('UsersController', () => {
   beforeEach(async () => {
     const mockUsersService = {
       create: jest.fn(),
+      findAll: jest.fn(),
+      findOne: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -31,30 +32,11 @@ describe('UsersController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('사용자를 생성한다.', async () => {
-    const name = 'simple user';
-    const email = 'simple@example.com';
-    const description = 'sudo rm -rf /';
+  it('없는 사용자를 조회한 경우 404 Not found 를 반환한다.', async () => {
+    jest.spyOn(usersService, 'findOne').mockResolvedValue(undefined);
 
-    jest
-      .spyOn(usersService, 'create')
-      .mockResolvedValue(
-        CreateUserResponseDto.from(mockUser(name, email, description)),
-      );
-
-    const dto = {
-      name,
-      email,
-      description,
-    };
-
-    const res = await controller.create(dto);
-
-    expect(res).toStrictEqual({
-      id: 1,
-      name,
-      email,
-      description,
-    });
+    await expect(controller.findOne('9574')).rejects.toThrowError(
+      NotFoundException,
+    );
   });
 });

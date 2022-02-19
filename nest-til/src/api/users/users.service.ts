@@ -20,11 +20,8 @@ export class UsersService {
     return users.map(UserItem.from);
   }
 
-  findOne(id: number): Promise<UserItem> {
-    return this.usersRepository
-      .findById(id)
-      .then((res) => res ?? Promise.reject(new NotFoundException()))
-      .then(UserItem.from);
+  async findOne(id: number): Promise<User> {
+    return this.usersRepository.findById(id);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
