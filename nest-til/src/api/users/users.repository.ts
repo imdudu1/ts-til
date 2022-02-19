@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { SearchUsersDto } from './dto/search-users.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -20,7 +21,11 @@ export class UsersRepository {
       .getOne();
   }
 
-  findAll(): Promise<User[]> {
-    return this.repository.createQueryBuilder('user').getMany();
+  findAll(searchUsersDto: SearchUsersDto): Promise<[User[], number]> {
+    return this.repository
+      .createQueryBuilder('user')
+      .offset(+searchUsersDto.page * +searchUsersDto.pageSize)
+      .limit(+searchUsersDto.pageSize)
+      .getManyAndCount();
   }
 }

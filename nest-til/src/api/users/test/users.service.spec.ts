@@ -3,7 +3,7 @@ import { UsersService } from '../users.service';
 import { UsersRepository } from '../users.repository';
 import { mockUser } from './user';
 import { User } from '../entities/user.entity';
-import { NotFoundException } from '@nestjs/common';
+import { SearchUsersDto } from '../dto/search-users.dto';
 import spyOn = jest.spyOn;
 
 describe('UsersService', () => {
@@ -77,22 +77,22 @@ describe('UsersService', () => {
     expect(user.description).toBe(description);
   });
 
-  it('없는 사용자를 조회한 경우 404 Not found 를 반환한다.', async () => {
-    jest.spyOn(usersRepository, 'findById').mockResolvedValue(undefined);
-
-    await expect(service.findOne(9574)).rejects.toThrowError(NotFoundException);
-  });
-
   it('사용자 목록을 조회한다.', async () => {
-    spyOn(usersRepository, 'findAll').mockResolvedValue([
-      User.create('', '', ''),
-    ]);
+    const totalUserCount = 41;
+    const pageSize = 20;
+    spyOn(usersRepository, 'findAll').mockResolvedValue([[], totalUserCount]);
+
+    // GIVEN
+    const dto: SearchUsersDto = new SearchUsersDto();
+    dto.page = 3;
+    dto.pageSize = pageSize;
 
     // WHEN
-    const body = await service.findAll();
+    const body = await service.findAll(dto);
 
     // THEN
-    expect(body.totalPage).toBe(1);
-    expect(body.currentPage).toBe(10);
+    expect(body.totalPage).toBe(3);
+    expect(body.pageSize).toBe(pageSize);
+    expect(body.totalCount).toBe(totalUserCount);
   });
 });

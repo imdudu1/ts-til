@@ -4,6 +4,7 @@ import connection from '../../../../test/infra/connection';
 import { getRepository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { UsersRepository } from '../users.repository';
+import { SearchUsersDto } from '../dto/search-users.dto';
 
 describe('UsersRepository', () => {
   let repository: UsersRepository;
@@ -69,13 +70,23 @@ describe('UsersRepository', () => {
 
   it('사용자 목록을 조회한다.', async () => {
     const users = [];
-    for (let i = 0; i < 10; i++) {
+    const totalUserCount = 10;
+    for (let i = 0; i < totalUserCount; i++) {
       users.push(User.create(`user${i}`, `example${i}@example.com`, 'hello'));
     }
     await getRepository(User).save(users);
 
-    const findUsers = await repository.findAll();
+    // GIVEN
+    const pageSize = 3;
+    const dto = new SearchUsersDto();
+    dto.page = 1;
+    dto.pageSize = pageSize;
 
-    expect(findUsers.length).toBe(10);
+    // WHEN
+    const [findUsers, count] = await repository.findAll(dto);
+
+    // THEN
+    expect(findUsers).toHaveLength(pageSize);
+    expect(count).toBe(totalUserCount);
   });
 });

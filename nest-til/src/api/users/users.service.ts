@@ -1,9 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto, CreateUserResponseDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
 import { UserItem } from './dto/user-item';
+import { PaginationDto } from './dto/pagination.dto';
+import { SearchUsersDto } from './dto/search-users.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,9 +17,11 @@ export class UsersService {
       .then(CreateUserResponseDto.from);
   }
 
-  async findAll(): Promise<UserItem[]> {
-    const users = await this.usersRepository.findAll();
-    return users.map(UserItem.from);
+  async findAll(
+    searchUsersDto: SearchUsersDto,
+  ): Promise<PaginationDto<UserItem>> {
+    const [users, count] = await this.usersRepository.findAll(searchUsersDto);
+    return new PaginationDto<UserItem>(users, count, searchUsersDto.pageSize);
   }
 
   async findOne(id: number): Promise<User> {

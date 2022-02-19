@@ -99,6 +99,7 @@ describe('User (e2e)', () => {
       expect(res.statusCode).toBe(HttpStatus.NOT_FOUND);
     });
   });
+
   describe('/users GET', () => {
     it('전체 사용자를 조회한다.', async () => {
       const users = [];
@@ -108,18 +109,20 @@ describe('User (e2e)', () => {
       await getRepository(User).save(users);
 
       const res = await request(app.getHttpServer())
-        .get(`/users`)
-        .query({})
+        .get(`/users?page=1&pageSize=5`)
         .send();
       expect(res.statusCode).toBe(HttpStatus.OK);
-      expect(res.body.leading).toBeGreaterThanOrEqual(1);
+      expect(res.body.totalPage).toBe(2);
+      expect(res.body.items).toHaveLength(5);
     });
   });
+
   describe('/users/:id PATCH', () => {
     it.todo('사용자 정보를 갱신한다.');
     it.todo('없는 사용자에 대해 요청한 경우 404 Not found 를 반환한다.');
     it.todo('잘못된 값을 요청한 경우 400 Bad Request 를 반환한다.');
   });
+
   describe('/users/:id DELETE', () => {
     it.todo(
       '사용자를 성공적으로 제거한 경우 204 No Content 와 사용자 이름을 반환한다.',
