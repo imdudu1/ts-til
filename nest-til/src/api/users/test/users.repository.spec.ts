@@ -2,9 +2,10 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import connection from '../../../../test/infra/connection';
 import { getRepository } from 'typeorm';
-import { User } from '../entities/user.entity';
-import { UsersRepository } from '../users.repository';
+import { User } from '../domain/repository/entities/user.entity';
+import { UsersRepository } from '../domain/repository/users.repository';
 import { SearchUsersDto } from '../dto/search-users.dto';
+import { UserDomain } from '../domain/user';
 
 describe('UsersRepository', () => {
   let repository: UsersRepository;
@@ -40,7 +41,7 @@ describe('UsersRepository', () => {
     const name = 'sample';
     const email = 'sample@example.com';
     const description = 'sudo rm -rf /';
-    const param = User.create(name, email, description);
+    const param = UserDomain.create({ name, email, description });
 
     // WHEN
     const entity = await repository.save(param);
@@ -58,14 +59,16 @@ describe('UsersRepository', () => {
     const email = 'sample@example.com';
     const description = 'sudo rm -rf /';
 
-    const param = User.create(name, email, description);
-    await repository.save(param);
+    const param = await repository.save(
+      UserDomain.create({ name, email, description }),
+    );
 
     // WHEN
     const findUser = await repository.findById(param.id);
 
     // THEN
     expect(findUser.id).toBe(param.id);
+    expect(findUser.name).toBe(param.name);
   });
 
   it('사용자 목록을 조회한다.', async () => {

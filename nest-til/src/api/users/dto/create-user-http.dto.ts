@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { UserDomain } from '../entities/user';
+import { UserDomain } from '../domain/user';
 
-export class CreateUserDto {
+export class CreateUserHttpReqDto {
   @IsString()
   readonly name: string;
 
@@ -11,15 +11,19 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   readonly description: string;
+
+  toDomain(): UserDomain {
+    return new UserDomain();
+  }
 }
 
-export class CreateUserResponseDto {
+export class CreateUserHttpResDto {
   readonly id: number;
   readonly name: string;
   readonly email: string;
   readonly description: string;
 
-  static from(entity: UserDomain): CreateUserResponseDto {
+  static from(entity: UserDomain): CreateUserHttpResDto {
     return {
       id: entity.id,
       name: entity.name,

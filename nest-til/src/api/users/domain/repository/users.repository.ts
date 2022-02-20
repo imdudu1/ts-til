@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SearchUsersDto } from './dto';
-import { UserDomain } from './entities/user';
+import { SearchUsersDto } from '../../dto';
+import { UserDomain } from '../user';
 import { UserMapper } from './entities/user.mapper';
 
 @Injectable()
@@ -12,8 +12,10 @@ export class UsersRepository {
     @InjectRepository(User) private readonly repository: Repository<User>,
   ) {}
 
-  save(entity: User): Promise<UserDomain> {
-    return this.repository.save(entity).then(UserMapper.toDomain);
+  save(userDomain: UserDomain): Promise<UserDomain> {
+    return this.repository
+      .save(UserMapper.toEntity(userDomain))
+      .then(UserMapper.toDomain);
   }
 
   findById(id: number): Promise<User | undefined> {

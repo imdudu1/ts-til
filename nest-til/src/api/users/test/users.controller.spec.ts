@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersController } from '../users.controller';
-import { UsersService } from '../users.service';
+import { UsersController } from '../ui/users.http-controller';
+import { UsersService } from '../application/users.service';
 import { NotFoundException } from '@nestjs/common';
 
 describe('UsersController', () => {

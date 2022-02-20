@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from '../users.service';
-import { UsersRepository } from '../users.repository';
+import { UsersService } from '../application/users.service';
+import { UsersRepository } from '../domain/repository/users.repository';
 import { mockUserDomain } from './user';
-import { User } from '../entities/user.entity';
+import { User } from '../domain/repository/entities/user.entity';
 import { SearchUsersDto } from '../dto/search-users.dto';
 import spyOn = jest.spyOn;
+import { CreateUserHttpReqDto } from '../dto';
+import { UserDomain } from '../domain/user';
+import exp = require('constants');
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -45,19 +48,14 @@ describe('UsersService', () => {
       .spyOn(usersRepository, 'save')
       .mockResolvedValue(mockUserDomain(name, email, description));
 
-    const dto = {
-      name,
-      email,
-      description,
-    };
-    const res = await service.create(dto);
+    const user = UserDomain.create({ name, email, description });
 
-    expect(res).toStrictEqual({
-      id: 1,
-      name,
-      email,
-      description,
-    });
+    const res = await service.create(user);
+
+    expect(res.id).toBe(1);
+    expect(res.name).toBe(name);
+    expect(res.email).toBe(email);
+    expect(res.description).toBe(description);
   });
 
   it('ID를 통해 사용자를 조회한다.', async () => {

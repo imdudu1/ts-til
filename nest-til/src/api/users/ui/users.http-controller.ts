@@ -9,23 +9,27 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from '../application/users.service';
 import {
-  CreateUserDto,
-  CreateUserResponseDto,
+  CreateUserHttpReqDto,
+  CreateUserHttpResDto,
   PaginationDto,
   SearchUsersDto,
   UpdateUserDto,
   UserItemDto,
-} from './dto';
+} from '../dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<CreateUserResponseDto> {
-    return this.usersService.create(createUserDto);
+  create(
+    @Body() createUserHttpReqDto: CreateUserHttpReqDto,
+  ): Promise<CreateUserHttpResDto> {
+    return this.usersService
+      .create(createUserHttpReqDto.toDomain())
+      .then(CreateUserHttpResDto.from);
   }
 
   @Get()

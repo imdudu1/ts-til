@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '../src/api/users/users.module';
 import * as request from 'supertest';
-import { User } from '../src/api/users/entities/user.entity';
+import { User } from '../src/api/users/domain/repository/entities/user.entity';
 import { getRepository, Repository } from 'typeorm';
 
 describe('User (e2e)', () => {

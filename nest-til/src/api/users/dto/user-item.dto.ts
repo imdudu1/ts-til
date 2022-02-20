@@ -1,4 +1,4 @@
-import { User } from '../entities/user.entity';
+import { User } from '../domain/repository/entities/user.entity';
 
 export class UserItemDto {
   name: string;

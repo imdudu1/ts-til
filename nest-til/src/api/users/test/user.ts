@@ -1,4 +1,4 @@
-import { UserDomain } from '../entities/user';
+import { UserDomain } from '../domain/user';
 
 export const mockUserDomain = (
   name: string,

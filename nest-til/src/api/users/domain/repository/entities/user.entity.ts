@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { BaseTimeEntity } from '../../../common/entities/base.entity';
+import { BaseTimeEntity } from '../../../../../common/entities/base.entity';
 
 export type UserEssentialProperties = {
   name: string;
