@@ -10,11 +10,14 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto, CreateUserResponseDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserItem } from './dto/user-item';
-import { SearchUsersDto } from './dto/search-users.dto';
-import { PaginationDto } from './dto/pagination.dto';
+import {
+  CreateUserDto,
+  CreateUserResponseDto,
+  PaginationDto,
+  SearchUsersDto,
+  UpdateUserDto,
+  UserItemDto,
+} from './dto';
 
 @Controller('users')
 export class UsersController {
@@ -28,7 +31,7 @@ export class UsersController {
   @Get()
   findAll(
     @Query() searchUserDto: SearchUsersDto,
-  ): Promise<PaginationDto<UserItem>> {
+  ): Promise<PaginationDto<UserItemDto>> {
     return this.usersService.findAll(searchUserDto);
   }
 
@@ -38,7 +41,7 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException();
     }
-    return UserItem.from(user);
+    return UserItemDto.from(user);
   }
 
   @Patch(':id')

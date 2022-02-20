@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto, CreateUserResponseDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
 import { User } from './entities/user.entity';
-import { UserItem } from './dto/user-item';
-import { PaginationDto } from './dto/pagination.dto';
-import { SearchUsersDto } from './dto/search-users.dto';
+import {
+  CreateUserDto,
+  CreateUserResponseDto,
+  PaginationDto,
+  SearchUsersDto,
+  UpdateUserDto,
+  UserItemDto,
+} from './dto';
 
 @Injectable()
 export class UsersService {
@@ -19,9 +22,13 @@ export class UsersService {
 
   async findAll(
     searchUsersDto: SearchUsersDto,
-  ): Promise<PaginationDto<UserItem>> {
+  ): Promise<PaginationDto<UserItemDto>> {
     const [users, count] = await this.usersRepository.findAll(searchUsersDto);
-    return new PaginationDto<UserItem>(users, count, searchUsersDto.pageSize);
+    return new PaginationDto<UserItemDto>(
+      users,
+      count,
+      searchUsersDto.pageSize,
+    );
   }
 
   async findOne(id: number): Promise<User> {

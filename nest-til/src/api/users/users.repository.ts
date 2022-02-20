@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SearchUsersDto } from './dto/search-users.dto';
+import { SearchUsersDto } from './dto';
 
 @Injectable()
 export class UsersRepository {

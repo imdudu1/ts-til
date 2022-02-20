@@ -1,11 +1,11 @@
 import { User } from '../entities/user.entity';
 
-export class UserItem {
+export class UserItemDto {
   name: string;
   email: string;
   description: string;
 
-  static from(entity: User): UserItem {
+  static from(entity: User): UserItemDto {
     return {
       description: entity.description,
       email: entity.email,
