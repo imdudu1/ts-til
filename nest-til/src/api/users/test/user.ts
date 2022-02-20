@@ -1,14 +1,14 @@
-import { User } from '../entities/user.entity';
+import { UserDomain } from '../entities/user';
 
-export const mockUser = (
+export const mockUserDomain = (
   name: string,
   email: string,
   description: string,
-): User => {
-  const user = new User();
-  user.id = 1;
-  user.name = name;
-  user.email = email;
-  user.description = description;
-  return user;
+): UserDomain => {
+  return UserDomain.create({
+    id: 1,
+    name,
+    email,
+    description,
+  });
 };

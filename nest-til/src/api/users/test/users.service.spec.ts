@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../users.service';
 import { UsersRepository } from '../users.repository';
-import { mockUser } from './user';
+import { mockUserDomain } from './user';
 import { User } from '../entities/user.entity';
 import { SearchUsersDto } from '../dto/search-users.dto';
 import spyOn = jest.spyOn;
@@ -43,7 +43,7 @@ describe('UsersService', () => {
 
     jest
       .spyOn(usersRepository, 'save')
-      .mockResolvedValue(mockUser(name, email, description));
+      .mockResolvedValue(mockUserDomain(name, email, description));
 
     const dto = {
       name,

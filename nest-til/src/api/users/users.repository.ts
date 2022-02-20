@@ -3,6 +3,8 @@ import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SearchUsersDto } from './dto';
+import { UserDomain } from './entities/user';
+import { UserMapper } from './entities/user.mapper';
 
 @Injectable()
 export class UsersRepository {
@@ -10,8 +12,8 @@ export class UsersRepository {
     @InjectRepository(User) private readonly repository: Repository<User>,
   ) {}
 
-  save(entity: User): Promise<User> {
-    return this.repository.save(entity);
+  save(entity: User): Promise<UserDomain> {
+    return this.repository.save(entity).then(UserMapper.toDomain);
   }
 
   findById(id: number): Promise<User | undefined> {
