@@ -93,6 +93,18 @@ L.entries = function* (obj) {
     }
 };
 
+L.values = function* (obj) {
+  for (const k in obj) {
+    yield obj[k];
+  }
+}
+
+L.keys = function* (obj) {
+  for (const k in obj) {
+    yield k;
+  }
+}
+
 L.flatten = function* (iter) {
     for (const elem of iter) {
         if (isIterable(elem)) {
@@ -150,3 +162,4 @@ C.filter = F.curry(F.pipe(L.filter, concurrentTakeAll));
 export {
     F, L, C
 }
+

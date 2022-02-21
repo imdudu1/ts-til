@@ -76,3 +76,42 @@ F.go(
 // Example (10)
 C.map(a => delay1000(a * a), [1, 2, 3, 4, 5, 6, 7]).then(F.log('Concurrent map example >> '));
 C.filter(a => delay1000(a % 2), [1, 2, 3, 4, 5, 6, 7]).then(F.log('Concurrent filter example >> '));
+
+// Example (11)
+const split = F.curry((sep, s) => s.split(sep));
+const queryToObject = F.pipe(
+  split('&'),
+  L.map(split('=')),
+  L.map(([k, v]) => ({ [k]: v })),
+  F.reduce(Object.assign));
+console.log(queryToObject('a=1&c=CC&d=Dd'));
+
+// Example (12)
+const f = x => x + 10;
+const g = x => x - 5;
+const fg = x => f(g(x));
+
+F.go(
+  [],
+  L.map(fg));
+
+// Example (13)
+const users = [{ name: 'aa' }, { name: 'bb' }];
+const findUser = F.take(1, L.filter(u => u.name === 'bb', users));
+console.log(findUser);
+
+// Example (14)
+const obj = {
+  a: 1,
+  b: 2,
+  c: 3
+};
+
+console.log('Object.values >> ', Object.values(obj));
+
+console.log('L.values >> ', [...L.values(obj)]);
+
+// Example (15)
+console.log([...L.entries(obj)]);
+
+
