@@ -162,4 +162,3 @@ C.filter = F.curry(F.pipe(L.filter, concurrentTakeAll));
 export {
     F, L, C
 }
-
