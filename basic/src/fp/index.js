@@ -116,14 +116,11 @@ console.log([...L.entries(obj)]);
 
 // Example (16)
 const a = [['a', 1], ['b', 2], ['c', 3], ['d', 4]];
-const object = entries => F.go(
-    entries,
-    L.map(([k, v]) => ({[k]: v})),
-    F.reduce(Object.assign)
-);
-console.log('object >> ', object(a));
+console.log('object >> ', F.object(a));
 
 // Example (17)
 const object2 = entries => F.reduce((obj, [k,v]) => (obj[k] = v, obj),  {}, entries)
 
 console.log('object2 >> ', object2(L.entries({b:2, c:3})));
+// Example (18)
+console.log(F.mapObject(a => a + 10, {a:1, b:2, c:3}));

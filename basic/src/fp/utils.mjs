@@ -159,6 +159,18 @@ C.map = F.curry(F.pipe(L.map, concurrentTakeAll));
 
 C.filter = F.curry(F.pipe(L.filter, concurrentTakeAll));
 
+F.object = entries => F.go(
+    entries,
+    L.map(([k, v]) => ({[k]: v})),
+    F.reduce(Object.assign)
+);
+
+F.mapObject = (fn, obj) => F.go(
+    obj,
+    L.entries,
+    F.map(([k, v]) => [k, fn(v)]),
+    F.object
+);
 export {
     F, L, C
 }
