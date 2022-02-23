@@ -122,5 +122,9 @@ console.log('object >> ', F.object(a));
 const object2 = entries => F.reduce((obj, [k,v]) => (obj[k] = v, obj),  {}, entries)
 
 console.log('object2 >> ', object2(L.entries({b:2, c:3})));
+
 // Example (18)
 console.log(F.mapObject(a => a + 10, {a:1, b:2, c:3}));
+
+// Example (19)
+console.log('pick >> ', F.pick(['a', 'b', 'z'], F.object(a)));

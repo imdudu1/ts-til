@@ -171,6 +171,14 @@ F.mapObject = (fn, obj) => F.go(
     F.map(([k, v]) => [k, fn(v)]),
     F.object
 );
+
+F.pick = (karr, obj) => F.go(
+    karr,
+    L.map(k => [k, obj[k]]),
+    L.filter(([k, v]) => v !== undefined),
+    F.object
+);
+
 export {
     F, L, C
 }
