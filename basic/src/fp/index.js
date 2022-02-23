@@ -136,5 +136,5 @@ const data = [
     {id: 15, name: 'day', age: 1300},
     {id: 9, name: 'to', age: 1050},
     {id: 4, name: 'you', age: 1090},
-]
-console.log('indexBy', F.indexBy((v) => v.id, data))
+];
+console.log('indexBy', F.indexBy((v) => v.id, data));

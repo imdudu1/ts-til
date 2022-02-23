@@ -172,10 +172,10 @@ F.mapObject = (fn, obj) => F.go(
     F.object
 );
 
-F.pick = (karr, obj) => F.go(
-    karr,
+F.pick = (keys, obj) => F.go(
+    keys,
     L.map(k => [k, obj[k]]),
-    L.filter(([k, v]) => v !== undefined),
+    L.filter(([_, v]) => v !== undefined),
     F.object
 );
 
