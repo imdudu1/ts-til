@@ -128,3 +128,13 @@ console.log(F.mapObject(a => a + 10, {a:1, b:2, c:3}));
 
 // Example (19)
 console.log('pick >> ', F.pick(['a', 'b', 'z'], F.object(a)));
+
+// Example (20)
+const data = [
+    {id: 1, name: 'happy', age: 1000},
+    {id: 20, name: 'birth', age: 1010},
+    {id: 15, name: 'day', age: 1300},
+    {id: 9, name: 'to', age: 1050},
+    {id: 4, name: 'you', age: 1090},
+]
+console.log('indexBy', F.indexBy((v) => v.id, data))

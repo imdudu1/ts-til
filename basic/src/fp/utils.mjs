@@ -179,6 +179,8 @@ F.pick = (karr, obj) => F.go(
     F.object
 );
 
+F.indexBy = (fn, iter) => F.reduce((acc, v) => (acc[fn(v)] = v, acc), {}, iter);
+
 export {
     F, L, C
 }
