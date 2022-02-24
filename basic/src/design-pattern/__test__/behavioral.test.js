@@ -11,6 +11,7 @@ import {
   MoveUp,
   Robot,
 } from "../src/behavioral/command";
+import { Ghost, Magician, Warrior } from "../src/behavioral/visitor";
 
 describe("Behavioral Tests", function () {
   test("Chain of responsibility", function () {
@@ -26,7 +27,7 @@ describe("Behavioral Tests", function () {
 
   test("Command Tests", function () {
     const robot = new Robot(0, 0);
-    const moves = [
+    const commands = [
       new MoveRight(),
       new MoveLeft(),
       new MoveLeft(),
@@ -34,9 +35,21 @@ describe("Behavioral Tests", function () {
       new MoveDown(),
     ];
 
-    moves.map((command) => command.execute(robot));
+    commands.map((command) => command.execute(robot));
 
     expect(robot.x).toBe(-1);
     expect(robot.y).toBe(0);
+  });
+
+  test("Visitor Tests", function () {
+    const warrior = new Warrior(10);
+    const magician = new Magician(15);
+    const ghost = new Ghost();
+
+    warrior.attack(ghost);
+    magician.attack(ghost);
+
+    expect(warrior.damageDealt).toBe(1);
+    expect(magician.damageDealt).toBe(30);
   });
 });
