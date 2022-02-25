@@ -26,5 +26,11 @@ describe("Todo app Tests", function () {
       list.add("work2", Date.now());
     });
 
+    test("Get task", function () {
+      const list = new TaskList("test task list");
+      list.add("work1", Date.now());
+
+      const task = list.getTask(0);
+    });
   });
 });

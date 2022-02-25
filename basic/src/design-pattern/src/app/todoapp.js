@@ -31,4 +31,7 @@ export const TaskList = class {
     this.#tasks.push(new Task(task, createdAt));
   }
 
+  getTask(index) {
+    return this.#tasks[index];
+  }
 };
