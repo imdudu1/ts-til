@@ -1,11 +1,11 @@
 export const Task = class {
   #title;
   #isComplete;
-  #data;
+  #date;
 
   constructor(title, createdAt) {
     this.#title = title;
-    this.#data = createdAt;
+    this.#date = createdAt;
     this.#isComplete = false;
   }
 
@@ -15,6 +15,10 @@ export const Task = class {
 
   toggle() {
     this.#isComplete = !this.#isComplete;
+  }
+
+  compareByDate(other) {
+    return this.#date < other.#date;
   }
 };
 

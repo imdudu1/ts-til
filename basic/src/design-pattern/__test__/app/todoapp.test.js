@@ -15,6 +15,13 @@ describe("Todo app Tests", function () {
 
       expect(task.isComplete()).toBeTruthy();
     });
+
+    test("Compare Task", function () {
+      const task1 = new Task("task1", Date.now());
+      const task2 = new Task("task1", Date.now() + 2);
+
+      expect(task1.compareByDate(task2)).toBeTruthy();
+    });
   });
 
   describe("TaskList Tests", function () {
