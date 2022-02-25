@@ -16,4 +16,15 @@ describe("Todo app Tests", function () {
       expect(task.isComplete()).toBeTruthy();
     });
   });
+
+  describe("TaskList Tests", function () {
+    test("Add new task", function () {
+      const list = new TaskList("test task list");
+
+      list.add("work1", Date.now());
+      list.add("work3", Date.now());
+      list.add("work2", Date.now());
+    });
+
+  });
 });
