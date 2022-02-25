@@ -39,5 +39,15 @@ describe("Todo app Tests", function () {
 
       const task = list.getTask(0);
     });
+
+    test("Get sorted list by date", function () {
+      const list = new TaskList("test task list");
+
+      list.add("work3", Date.now());
+      list.add("work2", Date.now() + 1);
+      list.add("work1", Date.now() + 2);
+
+      const sortedList = list.byDate();
+    });
   });
 });

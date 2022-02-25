@@ -22,6 +22,10 @@ export const Task = class {
   }
 };
 
+export const TaskSort = {
+  date: (l, r) => l.compareByDate(r),
+};
+
 export const TaskList = class {
   #tasks;
   #taskGroupName;
@@ -37,5 +41,13 @@ export const TaskList = class {
 
   getTask(index) {
     return this.#tasks[index];
+  }
+
+  byDate(state = false) {
+    return this.#getList("date", state);
+  }
+
+  #getList(sort, state) {
+    return [...this.#tasks].sort(TaskSort[sort]);
   }
 };
