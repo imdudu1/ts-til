@@ -1,24 +1,24 @@
-import { Task, TaskList } from "../../src/app/todoapp";
+import { TaskItem, TaskList } from "../../src/app/todoapp";
 
 describe("Todo app Tests", function () {
   describe("Task", function () {
-    test("Create new task", function () {
-      const task = new Task("test", Date.now());
+    test("Create new task item", function () {
+      const task = new TaskItem("test", Date.now());
 
       expect(task.isComplete()).toBeFalsy();
     });
 
-    test("Toggle task", function () {
-      const task = new Task("test", Date.now());
+    test("Toggle task item", function () {
+      const task = new TaskItem("test", Date.now());
 
       task.toggle();
 
       expect(task.isComplete()).toBeTruthy();
     });
 
-    test("Compare Task", function () {
-      const task1 = new Task("task1", Date.now());
-      const task2 = new Task("task1", Date.now() + 2);
+    test("Compare Task item", function () {
+      const task1 = new TaskItem("task1", Date.now());
+      const task2 = new TaskItem("task1", Date.now() + 2);
 
       expect(task1.compareByDate(task2)).toBeTruthy();
     });
