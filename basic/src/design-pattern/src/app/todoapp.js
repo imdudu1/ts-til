@@ -1,7 +1,3 @@
-export const TaskSort = {
-  date: (l, r) => l.compareByDate(r),
-};
-
 export const Task = class {
   #list;
 
@@ -10,7 +6,7 @@ export const Task = class {
   }
 
   add(taskItem) {
-    this.#list.push(new TaskItem(taskItem, Date.now()));
+    this.#list.push(taskItem);
   }
 
   remove(targetItem) {
@@ -26,15 +22,15 @@ export const Task = class {
   }
 
   getResult(sort, state) {
-    const result = [...this.#list].sort(TaskSort[sort]);
+    const result = [...this.#list].sort(sort);
     return {
       item: this._getResult(sort, state),
-      children: result.map((v) => v._getResult(sort, state)),
+      children: result.map((v) => v.getResult(sort, state)),
     };
   }
 
   _getResult(sort, state) {
-    throw new Error("You have must be to declare your #getResult method");
+    throw new Error("You have must be to declare your _getResult method");
   }
 };
 
@@ -43,6 +39,10 @@ export const TaskItem = class extends Task {
   #isComplete;
   #date;
   #subTasks;
+
+  static sortByDate(l, r) {
+    return l.compareByDate(r);
+  }
 
   constructor(title, createdAt) {
     super();
@@ -77,8 +77,16 @@ export const TaskList = class extends Task {
     this.#taskGroupName = taskGroupName;
   }
 
+  add(task) {
+    super.add(new TaskItem(task, Date.now()));
+  }
+
+  remove(task) {
+    super.remove(task);
+  }
+
   byDate(state = false) {
-    return this.getResult("date", state);
+    return this.getResult(TaskItem.sortByDate, state);
   }
 
   _getResult(sort, state) {
