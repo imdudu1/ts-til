@@ -30,7 +30,11 @@ export const Task = class {
   }
 
   _getResult(sort, state) {
-    throw new Error("You have must be to declare your _getResult method");
+    throw new Error("You have must be to declare your '_getResult' method");
+  }
+
+  operation(visitor, sort, state) {
+    throw new Error("You have must be to declare your 'operation' method");
   }
 };
 
@@ -52,6 +56,14 @@ export const TaskItem = class extends Task {
     this.#subTasks = [];
   }
 
+  get title() {
+    return this.#title;
+  }
+
+  get date() {
+    return this.#date;
+  }
+
   _getResult(sort, state) {
     return this;
   }
@@ -66,6 +78,14 @@ export const TaskItem = class extends Task {
 
   compareByDate(other) {
     return this.#date < other.#date;
+  }
+
+  operation(visitor, sort, state) {
+    visitor.item(this);
+    const sortType = TaskItem.sortByDate;
+    this.getResult(sortType, state).children.forEach(({ item }) =>
+      item.operation(visitor, sortType, state)
+    );
   }
 };
 
@@ -91,5 +111,19 @@ export const TaskList = class extends Task {
 
   _getResult(sort, state) {
     return this.#taskGroupName;
+  }
+
+  operation(visitor, sort, state) {
+    visitor.item(this);
+    const sortType = TaskItem.sortByDate;
+    this.getResult(sortType, state).children.forEach(({ item }) =>
+      item.operation(visitor, sortType, state)
+    );
+  }
+};
+
+const Visitor = class {
+  item(obj) {
+    return `[${obj.date}] ${obj.title}`;
   }
 };
