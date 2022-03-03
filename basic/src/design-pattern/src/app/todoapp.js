@@ -123,7 +123,18 @@ export const TaskList = class extends Task {
 };
 
 const Visitor = class {
-  item(obj) {
-    return `[${obj.date}] ${obj.title}`;
+  accept(task, sort, state) {
+    const s = TaskItem[sort];
+    switch (true) {
+      case task instanceof TaskItem:
+        this._item(task);
+        break;
+      case task instanceof TaskList:
+        this._list(task);
+        break;
+    }
   }
+
+  _item() {}
+  _list() {}
 };
