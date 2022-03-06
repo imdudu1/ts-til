@@ -1,5 +1,17 @@
 import { C, F, L } from "./utils.mjs";
-import { delay, each, flatL, go, mapL, rangeL, takeWhileL } from "fxjs";
+import {
+  delay,
+  each,
+  flat,
+  flatL,
+  go,
+  mapL,
+  rangeL,
+  rejectL,
+  takeUntilL,
+  takeWhileL,
+} from "fxjs";
+import { map } from "fxjs/es";
 
 // Example (1)
 const products = [
@@ -182,3 +194,65 @@ go(
   mapL((car) => `${car} start!`),
   each(console.log)
 );
+
+// Example (22)
+
+const genOrder = (imp_id, order_id, amount) => {
+  const ret = Object.create(null);
+  ret["imp_id"] = imp_id;
+  ret["order_id"] = order_id;
+  ret["amount"] = amount;
+  return ret;
+};
+
+const Impt = {
+  payments: {
+    1: [
+      genOrder(1, 1, 1500),
+      genOrder(2, 2, 2000),
+      genOrder(11, 3, 3500),
+      genOrder(12, 4, 1400),
+    ],
+    2: [genOrder(13, 5, 1500), genOrder(14, 6, 2000), genOrder(15, 7, 1400)],
+    3: [genOrder(16, 8, 1500), genOrder(17, 9, 2000)],
+    4: [],
+    5: [],
+  },
+  getPayments: (page) => {
+    console.log(`http://..?page=${page}`);
+    return delay(1000 * 2, Impt.payments[page]);
+  },
+  cancelPayment: (imp_id) => Promise.resolve(`${imp_id}: canceled`),
+};
+
+const DB = {
+  getOrders: (ids) => delay(100, [{ id: 1 }, { id: 2 }, { id: 3 }]),
+};
+
+const job = async function () {
+  const payments = await go(
+    rangeL(Infinity),
+    mapL(Impt.getPayments),
+    takeUntilL(({ length }) => length < 3),
+    flat
+  );
+
+  const orderIds = await go(
+    payments,
+    map((p) => p.order_id),
+    DB.getOrders,
+    map(({ id }) => id)
+  );
+
+  return go(
+    payments,
+    rejectL((p) => orderIds.includes(p.order_id)),
+    mapL(({ imp_id }) => imp_id),
+    mapL(Impt.cancelPayment),
+    each(console.log)
+  );
+};
+
+(function recur() {
+  Promise.all([delay(5000, undefined), job()]).then(recur);
+})();
