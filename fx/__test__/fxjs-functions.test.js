@@ -1,4 +1,5 @@
 import {
+  adjust,
   apply,
   applyEach,
   applyMethod,
@@ -8,7 +9,15 @@ import {
   curry,
   curryN,
   go,
+  juxt,
+  max,
+  mean,
+  min,
+  negate,
+  once,
+  pipe,
   sum,
+  tap,
 } from "fxjs";
 
 describe("FxJS function Tests", function () {
@@ -114,5 +123,65 @@ describe("FxJS function Tests", function () {
       expect(add1(1)(2)).toBe(3);
       expect(() => add1(1)(2)(3)).toThrow();
     });
+  });
+
+  test("go", function () {
+    expect(
+      go(
+        10,
+        (a) => a + 1,
+        (a) => a + 10
+      )
+    ).toBe(21);
+  });
+
+  test("juxt", function () {
+    const compute = juxt(min, max, sum, mean);
+
+    // Given
+    const numbers = [1, 2, 3, 4, 5];
+
+    // When
+    const result = compute(numbers);
+
+    // Then
+    expect(result).toStrictEqual([1, 5, 15, 3]);
+  });
+
+  test("negate", function () {
+    const ng = negate((a) => a);
+
+    // Then
+    expect(ng(true)).toBe(false);
+    expect(ng(false)).toBe(true);
+  });
+
+  test("once", function () {
+    const fn = once((a) => a + 10);
+
+    expect(fn(10)).toBe(20);
+    expect(fn(999)).toBe(20);
+  });
+
+  test("pipe", function () {
+    const p1 = pipe(
+      (a) => a.toUpperCase(),
+      (a) => a === "A"
+    );
+
+    expect(p1("A")).toBeTruthy();
+  });
+
+  test("tap", function () {
+    go(
+      10,
+      (a) => a + 5,
+      tap(
+        (a) => a + 985,
+        (res) => expect(res).toBe(1000)
+      ),
+      (a) => a + 15,
+      (res) => expect(res).toBe(30)
+    );
   });
 });
