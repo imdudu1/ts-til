@@ -1,4 +1,18 @@
-import { add, append, baseSel, chunk, compact, countBy, deepFlat } from "fxjs";
+import {
+  add,
+  append,
+  baseSel,
+  chunk,
+  compact,
+  countBy,
+  deepFlat,
+  defaults,
+  defaultTo,
+  delay,
+  difference,
+  differenceBy,
+  go,
+} from "fxjs";
 
 describe("Strict Tests", function () {
   test("Add", function () {
@@ -64,5 +78,47 @@ describe("Strict Tests", function () {
     const result = deepFlat(args);
 
     expect(result).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  });
+
+  test("Defaults", function () {
+    const input = { flavor: "chocolate" };
+    const defaultV = { flavor: "banana", sprinkles: "lots" };
+
+    const result = defaults(input, defaultV);
+
+    expect(result.flavor).toBe("chocolate");
+    expect(result.sprinkles).toBe("lots");
+  });
+
+  test("defaultTo", function () {
+    const obj = { a: 1, c: null, d: undefined };
+
+    expect(defaultTo(0, obj.a)).toBe(1);
+    expect(defaultTo(0, obj.b)).toBe(0);
+    expect(defaultTo(3, obj.c)).toBe(3);
+    expect(defaultTo(2, obj.d)).toBe(2);
+  });
+
+  test("difference", function () {
+    const l = [2, 3];
+    const r = [2, 1, 2];
+
+    expect(difference(l, r)).toStrictEqual([1]);
+  });
+
+  test("differenceBy", function () {
+    const fn = (o) => o.age;
+    const data = [
+      { name: "andrew", age: 20 },
+      { name: "robbie", age: 20 },
+    ];
+    const oldData = [
+      { name: "andrew", age: 20 },
+      { name: "anna", age: 21 },
+    ];
+
+    const [result] = differenceBy(fn, data, oldData);
+
+    expect(result.name).toBe("anna");
   });
 });
