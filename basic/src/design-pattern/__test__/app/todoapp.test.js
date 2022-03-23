@@ -27,5 +27,13 @@ describe("Todo app Tests", function () {
 
       expect(new TaskState().stateKeys()).toStrictEqual(["test1", "test2"]);
     });
+
+    test("상태의 키값을 얻는다", function () {
+      TaskState.addState("test2", class extends TaskState {});
+
+      const instance = TaskState.getState("test2");
+
+      expect(`${instance}`).toBe("test2");
+    });
   });
 });

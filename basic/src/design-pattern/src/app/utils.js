@@ -26,4 +26,10 @@ export const TaskState = class {
   stateKeys() {
     return Array.from(TaskState.#subClasses.keys());
   }
+
+  [Symbol.toPrimitive](hint) {
+    for (const [k, cls] of TaskState.#subClasses) {
+      if (this instanceof cls) return k;
+    }
+  }
 };
