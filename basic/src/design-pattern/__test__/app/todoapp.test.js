@@ -1,4 +1,4 @@
-import { TaskItem, TaskState } from "../../src/app/utils";
+import { TaskItem, TaskList, TaskState } from "../../src/app/utils";
 
 describe("Todo app Tests", function () {
   describe("TaskState Tests", function () {
@@ -37,7 +37,7 @@ describe("Todo app Tests", function () {
     });
   });
 
-  describe("TestItem Tests", function () {
+  describe("TaskItem Tests", function () {
     test("할 일 생성", function () {
       const now = Date.now();
       const item = new TaskItem("test", now);
@@ -46,6 +46,15 @@ describe("Todo app Tests", function () {
       expect(item.date).toEqual(now);
       expect(`${item.state}`).toEqual("waiting");
       expect(item.isComplete()).toBeFalsy();
+    });
+  });
+
+  describe("TaskList Tests", function () {
+    test("할 일 목록 생성", function () {
+      const list = new TaskList("오늘 할 일");
+
+      expect(list).toBeDefined();
+      expect(list.title).toBe("오늘 할 일");
     });
   });
 });

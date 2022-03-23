@@ -74,3 +74,16 @@ export const TaskItem = class {
     return this.#state.isComplete();
   }
 };
+
+export const TaskList = class {
+  #title;
+
+  constructor(title) {
+    this.#title = title;
+    this._title = title;
+  }
+
+  get title() {
+    return this._title;
+  }
+};
