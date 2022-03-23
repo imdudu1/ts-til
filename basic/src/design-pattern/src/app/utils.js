@@ -22,4 +22,8 @@ export const TaskState = class {
   get order() {
     throw "you must have your own 'order' getter";
   }
+
+  stateKeys() {
+    return Array.from(TaskState.#subClasses.keys());
+  }
 };

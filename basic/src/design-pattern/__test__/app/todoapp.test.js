@@ -20,5 +20,12 @@ describe("Todo app Tests", function () {
       expect(testSubState.isComplete()).toBeTruthy();
       expect(testSubState.order).toBe(1);
     });
+
+    test("저장된 태스트의 상태 목록", function () {
+      TaskState.addState("test1", class extends TaskState {});
+      TaskState.addState("test2", class extends TaskState {});
+
+      expect(new TaskState().stateKeys()).toStrictEqual(["test1", "test2"]);
+    });
   });
 });
