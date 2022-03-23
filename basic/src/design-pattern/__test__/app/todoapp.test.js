@@ -1,4 +1,4 @@
-import { TaskState } from "../../src/app/utils";
+import { TaskItem, TaskState } from "../../src/app/utils";
 
 describe("Todo app Tests", function () {
   describe("TaskState Tests", function () {
@@ -34,6 +34,18 @@ describe("Todo app Tests", function () {
       const instance = TaskState.getState("test2");
 
       expect(`${instance}`).toBe("test2");
+    });
+  });
+
+  describe("TestItem Tests", function () {
+    test("할 일 생성", function () {
+      const now = Date.now();
+      const item = new TaskItem("test", now);
+
+      expect(item.title).toBe("test");
+      expect(item.date).toEqual(now);
+      expect(`${item.state}`).toEqual("waiting");
+      expect(item.isComplete()).toBeFalsy();
     });
   });
 });
