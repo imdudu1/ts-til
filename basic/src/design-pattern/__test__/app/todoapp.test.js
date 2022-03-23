@@ -57,4 +57,19 @@ describe("Todo app Tests", function () {
       expect(list.title).toBe("오늘 할 일");
     });
   });
+
+  describe("Save/Restore Tests", function () {
+    describe("저장", function () {
+      test("TaskItem 저장", function () {
+        const createdAt = new Date();
+        const obj = new TaskItem("test", createdAt);
+        const json = obj.toJSON();
+        expect(json).toBe(`"type": "item",
+"title": "test",
+"date": "${createdAt.toISOString()}",
+"state": "waiting"`);
+      });
+    });
+    test.todo("불러오기");
+  });
 });

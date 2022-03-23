@@ -73,6 +73,13 @@ export const TaskItem = class {
   isComplete() {
     return this.#state.isComplete();
   }
+
+  toJSON() {
+    return `"type": "item",
+"title": "${this.#title}",
+"date": "${this.#date.toISOString()}",
+"state": "${this.#state}"`;
+  }
 };
 
 export const TaskList = class {
