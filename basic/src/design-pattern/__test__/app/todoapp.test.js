@@ -70,6 +70,14 @@ describe("Todo app Tests", function () {
 "state": "waiting"`);
       });
     });
-    test.todo("불러오기");
+    describe("불러오기", function () {
+      test("TaskItem 불러오기", function () {
+        const obj = new TaskItem("", null);
+
+        obj.restore({ title, date, state });
+
+        expect(obj.title).toBe(title);
+      });
+    });
   });
 });

@@ -38,3 +38,4 @@ class KimchiKimbap {
     return this.#kcal;
   }
 }
+

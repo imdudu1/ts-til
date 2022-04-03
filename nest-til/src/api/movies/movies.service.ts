@@ -8,6 +8,7 @@ export class MoviesService {
   constructor(private readonly moviesRepository: MoviesRepository) {}
 
   async create(createMovieDto: CreateMovieDto): Promise<MovieItemResponse> {
+    // TODO: DTO 제한
     return MovieItemResponse.of(
       await this.moviesRepository.create(createMovieDto),
     );

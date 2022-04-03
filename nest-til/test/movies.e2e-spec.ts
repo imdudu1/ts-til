@@ -17,7 +17,7 @@ describe('Movie (e2e)', () => {
       imports: [
         ConfigModule.forRoot({ envFilePath: '.env.test' }),
         TypeOrmModule.forRoot({
-          type: 'mysql',
+          type: 'postgres',
           host: process.env.DB_HOST,
           port: Number(process.env.DB_PORT),
           username: process.env.DB_USER,
@@ -37,9 +37,9 @@ describe('Movie (e2e)', () => {
     await app.init();
   });
 
-  beforeEach(async () => {
-    await moviesRepo.delete({});
-    await tagsRepo.delete({});
+  afterEach(async () => {
+    await moviesRepo.clear();
+    await tagsRepo.clear();
   });
 
   afterAll(async () => {
@@ -98,14 +98,15 @@ describe('Movie (e2e)', () => {
 
     const movie = await getMovieEntity(title, tagNames);
 
+    const updatedTitle = 'updated title';
     const response = await request(app.getHttpServer())
       .patch(`/movies/${movie.id}`)
       .send({
-        title: 'updated title',
+        title: updatedTitle,
       });
 
     expect(response.statusCode).toBe(HttpStatus.OK);
-    expect(response.body.title).toBe('updated title');
+    expect(response.body.title).toBe(updatedTitle);
   });
 
   it('/movies/:id DELETE', async () => {
