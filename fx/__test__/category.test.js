@@ -12,6 +12,7 @@ import {
 } from "fxjs";
 import { Category } from "../src/entities/category.entity";
 import { Course } from "../src/entities/course.entity";
+import { dbEnv } from "../src/config/db.init";
 
 describe("Category Tests", () => {
   let p;
@@ -20,12 +21,7 @@ describe("Category Tests", () => {
     FxSQL_DEBUG.LOG = true;
 
     const { CONNECT } = PostgreSQL;
-    p = CONNECT({
-      host: "localhost",
-      user: "postgres",
-      password: "pgpass",
-      database: "postgres",
-    });
+    p = CONNECT(dbEnv);
   });
 
   afterAll(function () {
@@ -35,7 +31,7 @@ describe("Category Tests", () => {
   test("해당 카테고리의 모든 강의 출력", async () => {
     const toDomain = ({ _: { courses: _courses }, ..._category }) => {
       const category = Category.fromEntity(_category);
-      const courses = go(_courses, mapL(Course.fromEntity), takeAll);
+      const courses = go(_courses, mapC(Course.fromEntity), takeAll);
 
       return {
         category,
@@ -45,7 +41,7 @@ describe("Category Tests", () => {
 
     const [result] = await go(
       p.ASSOCIATE`
-      categories ${p.SQL`WHERE id = 1`}
+      categories ${p.SQL`WHERE id = 1 AND deleted_at IS NULL`}
         < courses
     `,
       mapL(toDomain),
