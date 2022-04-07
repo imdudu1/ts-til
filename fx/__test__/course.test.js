@@ -50,30 +50,28 @@ describe("Course Tests", () => {
 
     test("열린 강의들의 수강생 수를 조회한다.", async () => {
       // given
-      /*
-select *
-from
-  (select * from courses where status = 'OPEN' and deleted_at is null) c
-  inner join instructors i on c.instructor_id = i.id
-  inner join categories ct on c.category_id = ct.id
-  left join (
-    select course_id, count(course_id) as total_students
-    from
-      subscribe_courses sc
-      inner join users u on sc.user_id = u.id and u.deleted_at is null
-    group by course_id) ts on c.id = ts.course_id and c.id = ts.course_id
-;
-      */
 
       // when
-      const result = await p.QUERY`
-      select * 
-      from 
-        (select * from ${p.TB("courses")} where ${p.EQ({ status: "OPEN" })}) c
-        inner join ${p.TB("instructors")} i on c.instructor_id = i.id`;
+      const [result] = await go(
+        p.QUERY`
+        select *
+        from
+          (select * from courses where status = 'OPEN' and deleted_at is null) c
+          inner join instructors i on c.instructor_id = i.id
+          inner join categories ct on c.category_id = ct.id
+          left join (
+            select course_id, count(course_id) as total_students
+            from
+              subscribe_courses sc
+              inner join users u on sc.user_id = u.id and u.deleted_at is null
+            group by course_id) ts on c.id = ts.course_id and c.id = ts.course_id
+        order by ts.total_students`,
+        mapL(({ total_students }) => total_students),
+        take1
+      );
 
       // then
-      console.log(result);
+      expect(+result).toBe(1);
     });
   });
 });
