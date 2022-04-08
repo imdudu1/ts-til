@@ -5,9 +5,25 @@ import {
   both,
   cond,
   either,
+  equals,
+  equals2,
+  equalsBy,
+  every,
+  gt,
+  gte,
   has,
   identity,
   ifElse,
+  isArray,
+  isFunction,
+  isIterable,
+  isUndefined,
+  lt,
+  lte,
+  merge,
+  range,
+  rangeL,
+  some,
   when,
 } from "fxjs";
 
@@ -40,6 +56,33 @@ describe("Predicates Tests", function () {
     expect(cond([f1, f2])(12)).toBe(11);
   });
 
+  test("Either", () => {
+    const isStr = (s) => typeof s === "string";
+    const isNumber = (n) => typeof n === "number";
+
+    expect(either(isStr, isNumber, 1)).toBeTruthy();
+    expect(either(isStr, isNumber, class {})).toBeFalsy();
+  });
+
+  describe("equals", () => {
+    test("equals", () => {
+      expect(equals(1, 1)).toBeTruthy();
+      expect(equals(1, 2)).toBeFalsy();
+    });
+
+    test("equals2", () => {
+      expect(equals2(1, true)).toBeTruthy();
+      expect(equals2(0, false)).toBeTruthy();
+    });
+
+    test("equalsBy", () => {
+      const isString = (v) => typeof v === "string";
+
+      expect(equalsBy(isString, "1", "2")).toBeTruthy();
+      expect(equalsBy(isString, "1", 1)).toBeFalsy();
+    });
+  });
+
   test("When", () => {
     const odd = (v) => v % 2 !== 0;
     const fn = (v) => v + 1;
@@ -61,5 +104,64 @@ describe("Predicates Tests", function () {
     expect(has("age", obj)).toBeTruthy();
     expect(has("name", obj)).toBeTruthy();
     expect(has("address", obj)).toBeFalsy();
+  });
+
+  test("Every", () => {
+    expect(every(identity, false)).toBeFalsy();
+    expect(every(identity, [1, 2, 3, 4, false])).toBeFalsy();
+    expect(every(identity, [1, 2, 3, 4])).toBeTruthy();
+  });
+
+  describe("Compares", () => {
+    test("gt", () => {
+      expect(gt(1, 2)).toBeFalsy();
+      expect(gt(2, 1)).toBeTruthy();
+      expect(gt(2, 2)).toBeFalsy();
+    });
+
+    test("gte", () => {
+      expect(gte(2, 2)).toBeTruthy();
+    });
+
+    test("lt", () => {
+      expect(lt(1, 1)).toBeFalsy();
+      expect(lt(1, 2)).toBeTruthy();
+    });
+
+    test("lte", () => {
+      expect(lte(1, 1)).toBeTruthy();
+      expect(lte(1, 2)).toBeTruthy();
+    });
+  });
+
+  test("isArray", () => {
+    expect(isArray([])).toBeTruthy();
+    expect(isArray(1)).toBeFalsy();
+  });
+
+  test("isFunction", () => {
+    expect(isFunction(() => {})).toBeTruthy();
+    expect(isFunction(function () {})).toBeTruthy();
+  });
+
+  test("isIterable", () => {
+    expect(isIterable([1, 2, 3, 4])).toBeTruthy();
+    expect(isIterable(rangeL(10))).toBeTruthy();
+  });
+
+  test("isUndefined", () => {
+    expect(isUndefined(undefined)).toBeTruthy();
+    expect(isUndefined(null)).toBeFalsy();
+    expect(isUndefined(false)).toBeFalsy();
+  });
+
+  test("some", () => {
+    expect(some(identity, [1, 2, 3, 4])).toBeTruthy();
+    expect(some(identity, [0, null, undefined, false])).toBeFalsy();
+    expect(some(identity, [true, 0, null, undefined, false])).toBeTruthy();
+  });
+
+  test("merge", () => {
+    console.log(merge([1, 2, 3]));
   });
 });
