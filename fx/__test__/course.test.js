@@ -74,4 +74,13 @@ describe("Course Tests", () => {
       expect(+result).toBe(1);
     });
   });
+
+  test("Polymorphic", async () => {
+    const reuslt = await p.ASSOCIATE`
+      courses
+        - instructors 
+          p - photos
+        p - photos
+      `;
+  });
 });
