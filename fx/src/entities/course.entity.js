@@ -1,3 +1,6 @@
+import { curry } from "fxjs";
+import { EntityFactory } from "./base.entity";
+
 export const Course = class {
   #id;
   #title;
@@ -34,11 +37,11 @@ export const Course = class {
     this.#deletedAt = deleted_at;
   }
 
-  static fromEntity(entity) {
-    return new Course(entity);
-  }
-
   get id() {
     return this.#id;
   }
 };
+
+export const CourseFactory = curry((allocator, props) =>
+  EntityFactory(allocator, props)
+)(Course);

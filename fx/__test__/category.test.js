@@ -11,7 +11,7 @@ import {
   takeAllC,
 } from "fxjs";
 import { Category } from "../src/entities/category.entity";
-import { Course } from "../src/entities/course.entity";
+import { Course, CourseFactory } from "../src/entities/course.entity";
 import { dbEnv } from "../src/config/db.init";
 
 describe("Category Tests", () => {
@@ -31,7 +31,7 @@ describe("Category Tests", () => {
   test("해당 카테고리의 모든 강의 출력", async () => {
     const toDomain = ({ _: { courses: _courses }, ..._category }) => {
       const category = Category.fromEntity(_category);
-      const courses = go(_courses, mapC(Course.fromEntity), takeAll);
+      const courses = go(_courses, mapC(CourseFactory), takeAll);
 
       return {
         category,
