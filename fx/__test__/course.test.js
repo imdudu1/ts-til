@@ -1,6 +1,6 @@
 import { FxSQL_DEBUG, PostgreSQL } from "fxsql";
 import { dbEnv } from "../src/config/db.init";
-import { go, take1, mapL } from "fxjs";
+import { go, take1, mapL, flatten } from "fxjs";
 
 describe("Course Tests", () => {
   let p;
@@ -76,11 +76,11 @@ describe("Course Tests", () => {
   });
 
   test("Polymorphic", async () => {
-    const reuslt = await p.ASSOCIATE`
-      courses
+    const result = await p.ASSOCIATE`
+      courses ${p.SQL`where status = 'OPEN' limit 5`}
         - instructors 
           p - photos
-        p - photos
+        p < photos
       `;
   });
 });
