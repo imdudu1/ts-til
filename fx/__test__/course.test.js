@@ -83,4 +83,17 @@ describe("Course Tests", () => {
         p < photos
       `;
   });
+
+  test("Hook 테스트", async () => {
+    const [row] = await p.ASSOCIATE`
+      courses ${{
+        hook: (courses) =>
+          courses.map((course) =>
+            Object.assign({}, course, { _popular: true })
+          ),
+      }}
+    `;
+
+    expect(row).toHaveProperty("_popular");
+  });
 });
