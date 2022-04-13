@@ -96,4 +96,22 @@ describe("Course Tests", () => {
 
     expect(row).toHaveProperty("_popular");
   });
+
+  test("Option", async () => {
+    const courses = await p.ASSOCIATE`
+      courses ${{ row_number: [10, p.SQL`id DESC`] }}
+        - instructor ${{
+          left_key: "instructor_id",
+          key: "id",
+          table: "instructors",
+        }}
+        x users ${{
+          key: "id",
+          xkey: "user_id",
+          left_key: "id",
+          left_xkey: "course_id",
+          xtable: "subscribe_courses",
+        }}
+    `;
+  });
 });
