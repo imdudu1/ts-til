@@ -19,13 +19,14 @@ import {
   isIterable,
   isUndefined,
   lt,
-  lte,
+  lte, match,
   merge,
   range,
   rangeL,
   some,
   when,
 } from "fxjs";
+import Equals from "fxjs/Strict/equals";
 
 describe("Predicates Tests", function () {
   test("All", () => {
@@ -162,6 +163,18 @@ describe("Predicates Tests", function () {
   });
 
   test("merge", () => {
-    console.log(merge([1, 2, 3]));
+    expect(merge([1, 2, 3])()).toStrictEqual({'0': 1, '1': 2, '2': 3});
   });
+
+  test('match', () => {
+    const m =
+      match
+        .case(equals(10), (v) => v * 10)
+        .case(equals(11), (v) => v + 1)
+        .else(v => 100);
+
+    expect(m(10)).toBe(100);
+    expect(m(11)).toBe(12);
+    expect(m(12)).toBe(100);
+  })
 });
