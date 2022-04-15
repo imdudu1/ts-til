@@ -18,7 +18,7 @@ import {
   dropUntil,
   entries,
   go,
-  identity,
+  identity, isIterable,
   mapEntries,
   max,
   mean,
@@ -26,12 +26,12 @@ import {
   min,
   omit,
   omitBy,
-  partition,
+  partition, pluck, prepend,
   range,
   reduce,
   remove,
   repeat,
-  sel,
+  sel, sum, toIter,
 } from "fxjs";
 
 describe("Strict Tests", function () {
@@ -212,6 +212,19 @@ describe("Strict Tests", function () {
   test("reduce", function () {
     const add = (a, b) => a + b;
     expect(reduce(add, [1, 2, 3, 4])).toBe(10);
+  });
+
+  test('pluck', function () {
+    const input = [{id: 1}, {id: 2}];
+    expect(pluck('id', input)).toStrictEqual([1,2]);
+  });
+
+  test('prepend', function () {
+    expect(prepend(1, [2,3])).toStrictEqual([1,2,3]);
+  });
+
+  test('toIter', function () {
+    expect(go(toIter([1,2]), isIterable)).toBeTruthy();
   });
 
   test("remove", function () {
