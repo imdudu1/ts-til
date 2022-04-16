@@ -168,10 +168,10 @@ describe("Predicates Tests", function () {
 
   test('match', () => {
     const m =
-      match
-        .case(equals(10), (v) => v * 10)
-        .case(equals(11), (v) => v + 1)
-        .else(v => 100);
+      match()
+        .case(10, (v) => v * 10)
+        .case(11, (v) => v + 1)
+        .else(() => 100);
 
     expect(m(10)).toBe(100);
     expect(m(11)).toBe(12);
