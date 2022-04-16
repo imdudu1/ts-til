@@ -31,7 +31,7 @@ import {
   reduce,
   remove,
   repeat,
-  sel, sum, toIter,
+  sel, sum, toIter, zip,
 } from "fxjs";
 
 describe("Strict Tests", function () {
@@ -235,4 +235,8 @@ describe("Strict Tests", function () {
     const add = (a, b) => a + b;
     expect(go(repeat(1, 10), reduce(add))).toBe(10);
   });
+
+  test('zip', function () {
+    zip();
+  })
 });
