@@ -16,7 +16,7 @@ import {
   drop,
   dropRight,
   dropUntil,
-  entries,
+  entries, findWhere,
   go,
   identity, isIterable,
   mapEntries,
@@ -98,6 +98,16 @@ describe("Strict Tests", function () {
     const result = deepFlat(args);
 
     expect(result).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  });
+
+  test('findWhere', function () {
+    expect(findWhere({ age: 23 }, [
+      { name: 'a', age: 15, },
+      { name: 'b', age: 19, },
+      { name: 'c', age: 23, },
+      { name: 'd', age: 17, },
+      { name: 'e', age: 23, }
+    ])).toStrictEqual({name: 'c', age: 23});
   });
 
   test("Defaults", function () {
