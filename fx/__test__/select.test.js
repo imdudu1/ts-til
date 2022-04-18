@@ -10,10 +10,13 @@ describe("Select Tests", function () {
     p = CONNECT({
       host: "localhost",
       user: "postgres",
-      password: "testpw",
+      password: "pgpass",
       database: "postgres",
     });
   });
+
+  afterEach(async function () {
+  })
 
   afterAll(function () {
     p.END();
@@ -103,4 +106,20 @@ describe("Select Tests", function () {
     // Then
     expect(rows.length).toBe(1);
   });
+
+  test('Transaction', async () => {
+    const { TRANSACTION, ASSOCIATE, SQL } = p;
+    const { QUERY, ROLLBACK } = await TRANSACTION();
+
+    await QUERY`insert into users ${p.VALUES({
+      name: 'test',
+      email: 'test@mail.com',
+    })}`;
+
+    const [result] = ASSOCIATE`
+      users `${SQL `where deleted_is is null`}`
+    `;
+
+    await ROLLBACK();
+  })
 });
