@@ -16,9 +16,11 @@ import {
   drop,
   dropRight,
   dropUntil,
-  entries, findWhere,
+  entries,
+  findWhere,
   go,
-  identity, isIterable,
+  identity,
+  isIterable,
   mapEntries,
   max,
   mean,
@@ -26,13 +28,19 @@ import {
   min,
   omit,
   omitBy,
-  partition, pluck, prepend,
+  partition,
+  pluck,
+  prepend,
   range,
   reduce,
   remove,
   repeat,
-  sel, sum, toIter, zip,
+  sel,
+  sum,
+  toIter,
+  zip,
 } from "fxjs";
+import extend from "fxjs/cjs/Strict/extend";
 
 describe("Strict Tests", function () {
   test("Add", function () {
@@ -100,14 +108,16 @@ describe("Strict Tests", function () {
     expect(result).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   });
 
-  test('findWhere', function () {
-    expect(findWhere({ age: 23 }, [
-      { name: 'a', age: 15, },
-      { name: 'b', age: 19, },
-      { name: 'c', age: 23, },
-      { name: 'd', age: 17, },
-      { name: 'e', age: 23, }
-    ])).toStrictEqual({name: 'c', age: 23});
+  test("findWhere", function () {
+    expect(
+      findWhere({ age: 23 }, [
+        { name: "a", age: 15 },
+        { name: "b", age: 19 },
+        { name: "c", age: 23 },
+        { name: "d", age: 17 },
+        { name: "e", age: 23 },
+      ])
+    ).toStrictEqual({ name: "c", age: 23 });
   });
 
   test("Defaults", function () {
@@ -172,6 +182,11 @@ describe("Strict Tests", function () {
     expect(dropUntil((v) => 1 < v, [1, 2, 3, 4, 5])).toStrictEqual([3, 4, 5]);
   });
 
+  test("dropRight", function () {
+    const result = dropRight([1, 2, 3, 4])();
+    expect(result).toStrictEqual([1, 2, 3]);
+  });
+
   test("mapEntries", function () {
     expect(mapEntries((v) => v + 10, entries({ a: 1, b: 2 }))).toStrictEqual([
       ["a", 11],
@@ -224,17 +239,17 @@ describe("Strict Tests", function () {
     expect(reduce(add, [1, 2, 3, 4])).toBe(10);
   });
 
-  test('pluck', function () {
-    const input = [{id: 1}, {id: 2}];
-    expect(pluck('id', input)).toStrictEqual([1,2]);
+  test("pluck", function () {
+    const input = [{ id: 1 }, { id: 2 }];
+    expect(pluck("id", input)).toStrictEqual([1, 2]);
   });
 
-  test('prepend', function () {
-    expect(prepend(1, [2,3])).toStrictEqual([1,2,3]);
+  test("prepend", function () {
+    expect(prepend(1, [2, 3])).toStrictEqual([1, 2, 3]);
   });
 
-  test('toIter', function () {
-    expect(go(toIter([1,2]), isIterable)).toBeTruthy();
+  test("toIter", function () {
+    expect(go(toIter([1, 2]), isIterable)).toBeTruthy();
   });
 
   test("remove", function () {
@@ -246,7 +261,13 @@ describe("Strict Tests", function () {
     expect(go(repeat(1, 10), reduce(add))).toBe(10);
   });
 
-  test('zip', function () {
+  test("zip", function () {
     zip();
-  })
+  });
+
+  test("extend", function () {
+    expect(
+      extend({ flavor: "vanilla", sprinkles: "lots" }, { flavor: "chocolate" })
+    ).toStrictEqual({ flavor: "chocolate", sprinkles: "lots" });
+  });
 });
