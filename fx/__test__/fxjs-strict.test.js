@@ -16,12 +16,12 @@ import {
   drop,
   dropRight,
   dropUntil,
-  entries,
-  findWhere,
+  entries, filterL,
+  findWhere, flat,
   go,
   identity,
-  isIterable,
-  mapEntries,
+  isIterable, log,
+  mapEntries, mapL,
   max,
   mean,
   meanBy,
@@ -31,12 +31,12 @@ import {
   partition,
   pluck,
   prepend,
-  range,
+  range, rangeL,
   reduce,
   remove,
   repeat,
   sel,
-  sum,
+  sum, takeAllC,
   toIter,
   zip,
 } from "fxjs";
@@ -269,5 +269,18 @@ describe("Strict Tests", function () {
     expect(
       extend({ flavor: "vanilla", sprinkles: "lots" }, { flavor: "chocolate" })
     ).toStrictEqual({ flavor: "chocolate", sprinkles: "lots" });
+  });
+
+  test('Clojure Reducers', function () {
+    go(
+      rangeL(1, 10),
+      mapL((v) => { line: v * 10 }),
+      filterL((page) => page.line > 50),
+      mapL(({ line }) => line),
+      takeAllC(2),
+      flat,
+      countBy(identity),
+      log
+    );
   });
 });
