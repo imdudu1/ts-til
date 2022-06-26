@@ -1,6 +1,6 @@
-import { PostgreSQL, FxSQL_DEBUG } from "fxsql";
-import { go, mapL, take, take1, takeL } from "fxjs";
-import { User } from "../src/entities/user.entity";
+import {PostgreSQL, FxSQL_DEBUG} from "fxsql";
+import {go, mapL, take1} from "fxjs";
+import {User} from "../src/entities/user.entity";
 
 describe("User Tests", function () {
   let p;
@@ -8,7 +8,7 @@ describe("User Tests", function () {
   beforeAll(function () {
     FxSQL_DEBUG.LOG = true;
 
-    const { CONNECT } = PostgreSQL;
+    const {CONNECT} = PostgreSQL;
     p = CONNECT({
       host: "localhost",
       user: "postgres",
@@ -47,13 +47,13 @@ describe("User Tests", function () {
          */
         const [user] = await go(
           p.QUERY`select ${p.CL("*")} from ${p.TB("users")} where ${p.EQ({
-            email: "daron89@example.com",
+            email: "cd80@kakao.com",
           })}`,
           mapL(User.fromEntity),
           take1
         );
 
-        expect(user.id).toBe(2);
+        expect(user.id).toBe(1);
       });
 
       test("존재하지 않는 이메일을 조회한 경우 undefined을 반환한다", async () => {
@@ -67,6 +67,44 @@ describe("User Tests", function () {
 
         expect(user).toBeUndefined();
       });
+    });
+
+    describe("AS 모듈 사용하기", () => {
+      it("", async () => {
+        const postModuleHook = v => {
+          console.log(`first hook> ${JSON.stringify(v)}`);
+          return v;
+        }
+        const userModuleHook = v => {
+          console.log(`second hook> ${JSON.stringify(v)}`)
+          return v;
+        }
+        const result = await p.ASSOCIATE`
+        posts ${{
+          table: 'posts',
+          column: p.CL('title', 'content'),
+          hook: postModuleHook
+        }}
+          - user ${{
+          table: 'users',
+          column: p.CL('name', 'email'),
+          hook: userModuleHook
+        }}
+        `
+        expect(result).toBeTruthy();
+      })
+    })
+  });
+
+  describe("슬로우 쿼리에 대한 테스트", () => {
+    it("두 쿼리는 병렬적으로 수행된다.", async () => {
+      const sql1 = p.QUERY`SELECT pg_sleep(3);`;
+      const sql2 = p.QUERY`SELECT pg_sleep(3);`;
+
+      const [result1, result2] = await Promise.all([sql1, sql2]);
+
+      console.log(result1);
+      console.log(result2);
     });
   });
 });
