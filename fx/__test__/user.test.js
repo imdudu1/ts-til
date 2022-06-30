@@ -80,15 +80,16 @@ describe("User Tests", function () {
           return v;
         }
         const result = await p.ASSOCIATE`
-        posts ${{
-          table: 'posts',
-          column: p.CL('title', 'content'),
-          hook: postModuleHook
-        }}
-          - user ${{
+        user ${{
           table: 'users',
           column: p.CL('name', 'email'),
           hook: userModuleHook
+        }}
+          - posts ${{
+          table: 'posts',
+          left_key: 'id', key: 'user_id',
+          column: p.CL('title', 'content'),
+          hook: postModuleHook
         }}
         `
         expect(result).toBeTruthy();
